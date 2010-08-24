@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+     <!-- Used for NotificationEditor.class -->
+	    <string-array name="led_color_list_entries">
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Orange</item>  
+    </string-array>
+
+    <!-- Used in app/menu examples -->
+    <string-array name="led_color_list_values">
+        <item>red</item>
+        <item>blue</item>
+        <item>green</item>
+        <item>orange</item>  
+    </string-array>
+    
+        <string-array name="led_pattern_list_entries">
+        <item>Normal</item>
+        <item>Slow</item>
+        <item>Fast</item>
+        <item>Short Flash</item>
+        <item>Long Flash</item>  
+    </string-array>
+
+    <!-- Used in app/menu examples -->
+    <string-array name="led_pattern_list_values">
+        <item>normal</item>
+        <item>slow</item>
+        <item>fast</item>
+        <item>shortflash</item> 
+        <item>longflash</item> 
+    </string-array>
+    
+         <!-- Used for NotificationEditor.class -->
+	    <string-array name="notifyicon_list_entries">
+        <item>Icon 1</item>
+        <item>Icon 2</item>  
+    </string-array>
+
+    <!-- Used in app/menu examples -->
+    <string-array name="notifyicon_list_values">
+        <item>icon1</item>
+        <item>icon2</item>
+    </string-array>
+    
+        <!-- Used for Vibrate pattern list -->
+	    <string-array name="vibrate_pattern_list">
+        <item>Normal</item>
+        <item>Short Burst</item>
+        <item>Long Burst</item>
+        <item>Multiple Short Burst</item> 
+        <item>Multiple Long Burst</item> 
+    </string-array>
+
+    <!-- Used for vibrate pattern values -->
+    <string-array name="vibrate_pattern_list_values">
+        <item>normal</item>
+        <item>shortburst</item>
+        <item>longburst</item>
+        <item>multishort</item>
+        <item>multilong</item>
+    </string-array>
+        
+</resources>

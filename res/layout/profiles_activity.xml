@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:id="@+id/base_layout" >
+	
+	<LinearLayout android:id="@+id/profile_add" android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:background="@android:drawable/list_selector_background" android:clickable="true" android:focusable="true">
+	<TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:text="@string/profile_add" android:layout_marginTop="5dp" android:layout_marginBottom="5dp" 
+  				 android:padding="3dp" android:layout_gravity="center" android:gravity="left" android:textAppearance="?android:attr/textAppearanceLarge" />
+			</LinearLayout>
+
+
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="wrap_content" android:minHeight="?android:attr/listPreferredItemHeight">
+	<TextView style="?android:attr/listSeparatorTextViewStyle"
+		android:text="Profile List" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+		<ListView android:id="@+id/profile_list"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:layout_weight="1" android:fastScrollEnabled="true"
+			android:fadeScrollbars="true" android:choiceMode="singleChoice" />
+			</LinearLayout>
+</LinearLayout>

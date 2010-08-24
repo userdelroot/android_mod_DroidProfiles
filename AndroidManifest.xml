@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.fac.droidprofiles" android:versionCode="1"
+	android:versionName="1.0">
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.RECEIVE_MMS" />
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+	
+		<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+		<uses-permission android:name="android.permission.READ_CONTACTS" />
+		<application android:icon="@drawable/icon" android:label="@string/app_name" >
+			<provider android:name="ProfilesProvider"
+				android:authorities="com.fac.droidprofiles" />
+			<activity android:name="ProfilesActivity" android:label="@string/app_name"
+				android:launchMode="singleTask">
+				<intent-filter>
+					<action android:name="android.intent.action.MAIN" />
+					<category android:name="android.intent.category.DEFAULT" />
+					<category android:name="android.intent.category.LAUNCHER" />
+				</intent-filter>
+			</activity>
+			<service android:name="ProfileService">
+				<intent-filter>
+					<action android:name="com.fac.droidprofiles.ProfileService" />
+				</intent-filter>
+			</service>
+			<receiver android:name="ProfilesReceiver">
+				<intent-filter>
+					<action android:name="android.intent.action.PHONE_STATE" />
+					<action android:name="android.intent.action.BOOT_COMPLETED" />
+					<action android:name="android.provider.Telephony.SMS_RECEIVED" />
+					<action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
+					<action android:name="android.intent.action.DATA_SMS_RECEIVED" />
+				</intent-filter>
+			</receiver>
+			<activity android:name="AddProfile" android:launchMode="singleTask"></activity>
+
+
+			<activity android:name="ContactsActivity"
+				android:launchMode="singleTask"></activity>
+		<activity android:name="NotificationPreferences"></activity>
+</application>
+		<uses-sdk android:minSdkVersion="7" />
+
+</manifest> 

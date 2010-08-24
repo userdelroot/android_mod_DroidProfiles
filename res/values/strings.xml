@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_add">Add New Profile</string>
+    <string name="app_name">Droid Profiles</string>
+<string name="profile_name_title">Profile Name</string>
+<string name="profile_name_title_dialog">Enter a  profile name</string>
+<string name="profile_add_title">Create new profile</string>
+<string name="menu_save">Save</string>
+<string name="menu_cancel">Cancel</string>
+<string name="service_started">Started</string>
+<string name="service_stopped">Stopped</string>
+</resources>
