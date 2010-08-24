@@ -1,8 +1,14 @@
-SysInfo
-=======
+DroidProfiles
+=============
 
-SysInfo an app widget which displays the cpu usage, memory usage, and how many processes are running.
-root is not required to run this widget.  
+NOTE: This project has not been released due to some issues with playing custom ringtones dynamically.  Until a work around is found, this app will not be released to the public.
+
+
+
+This will allow you to make custom profiles for your phone.  BlackBerry phone users should be very familar with this.
+You can customize specific profile settings for SMS, MMS, EMAIL, PHONE notifications.
+
+You can specify an active profile and set profiles for specific contacts to override that profile.
 
 Comments and suggestions welcome along with patches.
 
