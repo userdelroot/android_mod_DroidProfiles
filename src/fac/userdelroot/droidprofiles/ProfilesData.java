@@ -1,6 +1,25 @@
-package com.fac.droidprofiles;
+/**
+ * 
+ * Copyright (C) 2010  userdelroot r00t316@gmail.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
 
-import com.fac.droidprofiles.Profile.Columns;
+
+package fac.userdelroot.droidprofiles;
+
+import fac.userdelroot.droidprofiles.Profile.Columns;
 
 import android.database.Cursor;
 import android.database.StaleDataException;
@@ -12,7 +31,7 @@ import android.provider.BaseColumns;
 
 /**
  * 
- * @author root
+ *  
  * Parcelable data 
  * Loads the profile and assocaited notifications with this specific profile
  *

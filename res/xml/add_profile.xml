@@ -14,8 +14,8 @@
   <CheckBoxPreference android:key="profile_silent" android:title="Silent Mode"/>
   <CheckBoxPreference android:key="profile_vibrate" android:title="Vibrate"/>
   <CheckBoxPreference android:key="profile_ringer" android:title="Ringer"/>
-  <com.fac.droidprofiles.pref.RingtonePref android:key="profile_ringtone" android:title="Select Ringtone" android:ringtoneType="all" android:showDefault="false"/>
-  <com.fac.droidprofiles.pref.VolumePref android:key="profile_ring_volume" android:title="Ringer Volume" />
+  <fac.userdelroot.droidprofiles.pref.RingtonePref android:key="profile_ringtone" android:title="Select Ringtone" android:ringtoneType="all" android:showDefault="false"/>
+  <fac.userdelroot.droidprofiles.pref.VolumePref android:key="profile_ring_volume" android:title="Ringer Volume" />
   <CheckBoxPreference android:key="profile_override" android:title="Override"/>
   <PreferenceScreen android:key="profile_contacts" android:title="Contacts" />
   </PreferenceCategory>

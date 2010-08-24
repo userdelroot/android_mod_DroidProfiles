@@ -1,10 +1,23 @@
 /**
- * Class is used for listening for PHONE,EMAIL,SMS,MMS broadcasts
- * When one of the broadcasts are sent by the android system we grab it and override 
- * the system.settings defaults
- * example: if a profile has a ringtone set we use that ringtone instead of the contacts or systems ringtone
+ * 
+ * Copyright (C) 2010  userdelroot r00t316@gmail.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
-package com.fac.droidprofiles;
+
+
+package fac.userdelroot.droidprofiles;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -19,7 +32,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 /**
- * @author root
+ *  
  * 
  */
 public class ProfileService extends Service {

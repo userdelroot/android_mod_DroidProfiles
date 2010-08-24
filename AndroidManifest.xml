@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.fac.droidprofiles" android:versionCode="1"
+	package="fac.userdelroot.droidprofiles" android:versionCode="1"
 	android:versionName="1.0">
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -16,7 +16,7 @@
 		<uses-permission android:name="android.permission.READ_CONTACTS" />
 		<application android:icon="@drawable/icon" android:label="@string/app_name" >
 			<provider android:name="ProfilesProvider"
-				android:authorities="com.fac.droidprofiles" />
+				android:authorities="fac.userdelroot.droidprofiles" />
 			<activity android:name="ProfilesActivity" android:label="@string/app_name"
 				android:launchMode="singleTask">
 				<intent-filter>
@@ -27,7 +27,7 @@
 			</activity>
 			<service android:name="ProfileService">
 				<intent-filter>
-					<action android:name="com.fac.droidprofiles.ProfileService" />
+					<action android:name="fac.userdelroot.droidprofiles.ProfileService" />
 				</intent-filter>
 			</service>
 			<receiver android:name="ProfilesReceiver">
@@ -46,6 +46,6 @@
 				android:launchMode="singleTask"></activity>
 		<activity android:name="NotificationPreferences"></activity>
 </application>
-		<uses-sdk android:minSdkVersion="7" />
+		<uses-sdk android:minSdkVersion="8" />
 
 </manifest> 

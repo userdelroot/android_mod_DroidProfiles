@@ -1,15 +1,30 @@
 /**
  * 
+ * Copyright (C) 2010  userdelroot r00t316@gmail.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
-package com.fac.droidprofiles;
+
+package fac.userdelroot.droidprofiles;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.fac.droidprofiles.pref.RingtonePref;
-import com.fac.droidprofiles.pref.VolumePref;
+import fac.userdelroot.droidprofiles.pref.RingtonePref;
+import fac.userdelroot.droidprofiles.pref.VolumePref;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,9 +44,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-/**
- * @author root
+/** 
  * 
+ * Add a profile class
  */
 public class AddProfile extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnPreferenceClickListener {
