@@ -44,7 +44,10 @@
 
 			<activity android:name="ContactsActivity"
 				android:launchMode="singleTask"></activity>
-		<activity android:name="NotificationPreferences"></activity>
+		<activity android:name="EmailPreferences" android:launchMode="singleTask"></activity>
+		<activity android:name="SMSPreferences" android:launchMode="singleTask"></activity>
+		<activity android:name="MMSPreferences" android:launchMode="singleTask"></activity>
+		<activity android:name="PhonePreferences" android:launchMode="singleTask"></activity>
 </application>
 		<uses-sdk android:minSdkVersion="8" />
 
