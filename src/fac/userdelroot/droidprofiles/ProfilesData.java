@@ -18,12 +18,7 @@
 
 
 package fac.userdelroot.droidprofiles;
-
-import fac.userdelroot.droidprofiles.Profile.Columns;
-
 import android.database.Cursor;
-import android.database.StaleDataException;
-import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -64,12 +59,9 @@ public final class ProfilesData implements Parcelable {
 	public int led_color;
 	public int led_pat;
 	public boolean notify_active;
-
-	// TODO: notify_icon Needs to be modified to a Uri
 	public String notify_icon;
 	public boolean ringer_active;
 	public float ringer_vol;
-	// TODO: ringtone needs to be modified to a Uri
 	public String notify_ringtone;
 	public boolean vibrate_active;
 	public int vibrate_pat;
@@ -179,15 +171,15 @@ public final class ProfilesData implements Parcelable {
 
 		// Uri for this this table
 		public static final Uri CONTENT_URI_PHONE = Uri
-				.parse("content://com.fac.droidprofiles/profiles/phone");
+				.parse("content://fac.userdelroot.droidprofiles/profiles/phone");
 
 		public static final Uri CONTENT_URI_SMS = Uri.parse("content://com.fac.droidprofiles/profiles/sms");
 		
 		// Uri for this this table
 		public static final Uri CONTENT_URI_MMS = Uri
-				.parse("content://com.fac.droidprofiles/profiles/mms");
+				.parse("content://fac.userdelroot.droidprofiles/profiles/mms");
 
-		public static final Uri CONTENT_URI_EMAIL = Uri.parse("content://com.fac.droidprofiles/profiles/email");	
+		public static final Uri CONTENT_URI_EMAIL = Uri.parse("content://fac.userdelroot.droidprofiles/profiles/email");	
 		
 		
 		public static final int TYPE_PHONE = 1;
