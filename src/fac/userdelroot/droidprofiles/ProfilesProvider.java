@@ -59,7 +59,7 @@ public class ProfilesProvider extends ContentProvider {
 	private static final int NOTIFICATION = 14;
 	private static final int NOTIFICATION_ID = 15;	
 	
-	private static final String AUTHORITY = "com.fac.droidprofiles";
+	private static final String AUTHORITY = "fac.userdelroot.droidprofiles";
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -147,7 +147,7 @@ public class ProfilesProvider extends ContentProvider {
 					+ "led_active INTEGER, " + "led_color INTEGER, "
 					+ "led_pattern INTEGER, " + "notifybar_active INTEGER, "
 					+ "notifybar_icon TEXT, " + "ringer_active INTEGER, "
-					+ "ringer_volume REAL, " + "ringtone TEXT, "
+					+ "ringer_volume INTEGER, " + "ringtone TEXT, "
 					+ "vibrate_active INTEGER, " + "vibrate_pattern INTEGER, "
 					+ "trackball_active INTEGER, "
 					+ "trackball_color INTEGER, "
