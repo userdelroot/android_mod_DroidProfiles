@@ -45,7 +45,7 @@ public final class Notify implements Parcelable {
 
 		// Uri for this table
 		public static final Uri CONTENT_URI = Uri
-				.parse("content://com.fac.droidprofiles/notifications");
+				.parse("content://fac.userdelroot.droidprofiles/notifications");
 
 		// Define tables
 		// _ID == index 0
@@ -114,7 +114,7 @@ public final class Notify implements Parcelable {
 	// TODO: notify_icon Needs to be modified to a Uri
 	public String notify_icon;
 	public boolean ringer_active;
-	public float ringer_vol;
+	public int ringer_vol;
 	// TODO: ringtone needs to be modified to a Uri
 	public String ringtone;
 	public boolean vibrate_active;
@@ -124,6 +124,10 @@ public final class Notify implements Parcelable {
 	public int tb_pat;
 	public int notify_type;
 
+	/**
+	 * Constructor from a Cursor
+	 * @param c
+	 */
 	public Notify(Cursor c) {
 		id = c.getInt(Columns.ID_INDEX);
 		profile_id = c.getInt(Columns.PROFILE_ID_INDEX);
@@ -133,7 +137,7 @@ public final class Notify implements Parcelable {
 		notify_active = c.getInt(Columns.NOTIFY_ACTIVE_INDEX) == 1;
 		notify_icon = c.getString(Columns.NOTIFY_ICON_INDEX);
 		ringer_active = c.getInt(Columns.RINGER_ACTIVE_INDEX) == 1;
-		ringer_vol = c.getFloat(Columns.RINGER_VOL_INDEX);
+		ringer_vol = c.getInt(Columns.RINGER_VOL_INDEX);
 		ringtone = c.getString(Columns.RINGTONE_INDEX);
 		vibrate_active = c.getInt(Columns.VIBRATE_ACTIVE_INDEX) == 1;
 		vibrate_pat = c.getInt(Columns.VIBRATE_PAT_INDEX);
@@ -143,6 +147,11 @@ public final class Notify implements Parcelable {
 		notify_type = c.getInt(Columns.NOTIFY_TYPE_INDEX);
 	}
 
+	
+	/**
+	 * Constructor from a parcel
+	 * @param p
+	 */
 	public Notify(Parcel p) {
 		id = p.readInt();
 		profile_id = p.readInt();
@@ -152,7 +161,7 @@ public final class Notify implements Parcelable {
 		notify_active = p.readInt() == 1;
 		notify_icon = p.readString();
 		ringer_active = p.readInt() == 1;
-		ringer_vol = p.readFloat();
+		ringer_vol = p.readInt();
 		ringtone = p.readString();
 		vibrate_active = p.readInt() == 1;
 		vibrate_pat = p.readInt();
@@ -162,6 +171,14 @@ public final class Notify implements Parcelable {
 		notify_type = p.readInt();
 	}
 
+	
+	/**
+	 * Constructor for this parcelable object
+	 */
+	public Notify() {
+	}
+	
+	
 	@Override
 	public void writeToParcel(Parcel p, int flags) {
 		p.writeInt(id);
@@ -172,7 +189,7 @@ public final class Notify implements Parcelable {
 		p.writeInt(notify_active ? 1 : 0);
 		p.writeString(notify_icon);
 		p.writeInt(ringer_active ? 1 : 0);
-		p.writeFloat(ringer_vol);
+		p.writeInt(ringer_vol);
 		p.writeString(ringtone);
 		p.writeInt(vibrate_active ? 1 : 0);
 		p.writeInt(vibrate_pat);
