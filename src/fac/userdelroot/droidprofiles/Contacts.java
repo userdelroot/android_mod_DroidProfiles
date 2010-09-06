@@ -33,7 +33,7 @@ public class Contacts {
 
 		// Uri for this table
 		public static final Uri CONTENT_URI = Uri
-				.parse("content://com.fac.droidprofiles/dpcontacts");
+				.parse("content://fac.userdelroot.droidprofiles/dpcontacts");
 
 		// Define tables
 		// _ID = index 0
