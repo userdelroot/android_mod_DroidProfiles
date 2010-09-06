@@ -29,13 +29,8 @@
 		<CheckBoxPreference android:key="ringing_enabled"
 			android:title="Ringing" android:summary="Turn ringer On / Off" />
 			
-		<RingtonePreference android:key="rington_set"
-			android:title="Select Ringtone" android:dependency="ringing_enabled"
-			android:layout="?android:attr/preferenceLayoutChild" />
-			
-		<PreferenceScreen android:key="ringer_volume"
-			android:title="Ring Volume" android:dependency="ringing_enabled"
-			android:layout="?android:attr/preferenceLayoutChild" />
+  <fac.userdelroot.droidprofiles.pref.RingtonePref android:key="ringtone" android:title="Select Ringtone" android:ringtoneType="all" android:showDefault="false" />
+  <fac.userdelroot.droidprofiles.pref.VolumePref android:key="ring_volume" android:title="Ringer Volume" />
 	</PreferenceCategory>
 
 	<PreferenceCategory android:key="vibrate_settings"
