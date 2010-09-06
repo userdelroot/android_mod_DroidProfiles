@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:key="notification_settings" android:title="Notification Setttings">
+			
+	<CheckBoxPreference android:key="led_enabled"
+		android:title="LED Enable" android:summary="Turn led On / Off" />
+		
+	<ListPreference android:key="led_pattern" android:title="LED Flash Pattern"
+		android:dependency="led_enabled" android:layout="?android:attr/preferenceLayoutChild"
+		android:dialogTitle="Select Pattern" android:entries="@array/led_pattern_list_entries"
+		android:entryValues="@array/led_pattern_list_values" />
+		
+	<ListPreference android:key="led_color" android:title="LED Color"
+		android:dependency="led_enabled" android:layout="?android:attr/preferenceLayoutChild"
+		android:dialogTitle="Select Color" android:entries="@array/led_color_list_entries"
+		android:entryValues="@array/led_color_list_values" />
+
+	<PreferenceCategory android:key="ringer_settings"
+		android:title="Ringer Settings">
+		<CheckBoxPreference android:key="ringing_enabled"
+			android:title="Ringing" android:summary="Turn ringer On / Off" />
+			
+ <fac.userdelroot.droidprofiles.pref.RingtonePref android:key="ringtone" android:title="Select Ringtone" android:ringtoneType="all" android:showDefault="false"/>
+  <fac.userdelroot.droidprofiles.pref.VolumePref android:key="ring_volume" android:title="Ringer Volume" />
+	</PreferenceCategory>
+
+	<PreferenceCategory android:key="vibrate_settings"
+		android:title="Vibrate Settings">
+		
+		<CheckBoxPreference android:key="vibrate_enabled"
+			android:title="Enable" android:summary="Turn vibrate On / Off" />
+			
+		<ListPreference android:key="vibrate_pattern"
+			android:title="Pattern" android:dependency="vibrate_enabled"
+			android:layout="?android:attr/preferenceLayoutChild" android:entries="@array/vibrate_pattern_list" 
+			android:entryValues="@array/vibrate_pattern_list_values" />
+	</PreferenceCategory>
+
+</PreferenceScreen>
