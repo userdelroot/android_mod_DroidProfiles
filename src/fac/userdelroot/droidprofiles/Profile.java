@@ -47,7 +47,7 @@ public final class Profile implements Parcelable {
 
 		// Uri for this this table
 		public static final Uri CONTENT_URI = Uri
-				.parse("content://com.fac.droidprofiles/profiles");
+				.parse("content://fac.userdelroot.droidprofiles/profiles");
 
 		// Colums _ID is index 0
 		public static final String NAME = "name"; // index 1
