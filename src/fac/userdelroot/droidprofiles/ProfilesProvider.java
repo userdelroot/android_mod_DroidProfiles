@@ -431,6 +431,7 @@ public class ProfilesProvider extends ContentProvider {
 				throw new SQLException("failed to insert contacts row " + uri);
 			newUri = ContentUris.withAppendedId(Contacts.Columns.CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(newUri, null);
+			break; // <- that damn missing break took 10 minutes to find lol
 		}
 		
 		case NOTIFICATION: {
