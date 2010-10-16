@@ -144,14 +144,14 @@ public class ProfilesProvider extends ContentProvider {
 
 			// Build the below table columns here for future changes
 			String sql = "_id INTEGER PRIMARY KEY, " + "profile_id INTEGER, "
-					+ "led_active INTEGER, " + "led_color INTEGER, "
-					+ "led_pattern INTEGER, " + "notifybar_active INTEGER, "
+					+ "led_active INTEGER, " + "led_color TEXT, "
+					+ "led_pattern TEXT, " + "notifybar_active INTEGER, "
 					+ "notifybar_icon TEXT, " + "ringer_active INTEGER, "
 					+ "ringer_volume INTEGER, " + "ringtone TEXT, "
-					+ "vibrate_active INTEGER, " + "vibrate_pattern INTEGER, "
+					+ "vibrate_active INTEGER, " + "vibrate_pattern TEXT, "
 					+ "trackball_active INTEGER, "
-					+ "trackball_color INTEGER, "
-					+ "trackball_pattern INTEGER, " + "notify_type INTEGER);";
+					+ "trackball_color TEXT, "
+					+ "trackball_pattern TEXT, " + "notify_type INTEGER);";
 
 			// notification table 1 email 2 sms 3 mms 4 phone
 			db.execSQL("CREATE TABLE notifications (" + sql);
@@ -181,7 +181,7 @@ public class ProfilesProvider extends ContentProvider {
 					.execSQL("INSERT INTO notifications "
 							+ "(profile_id,led_active,led_color,led_pattern,notifybar_active,"
 							+ "notifybar_icon,ringer_active,ringer_volume,ringtone,vibrate_active,vibrate_pattern,notify_type) "
-							+ "VALUES " + "(3,0,0,0,0,'',0,0,1,0,0,1);");
+							+ "VALUES " + "(3,1,'0','0',1,'',0,0,1,0,'0',4);");
 
 		}
 
