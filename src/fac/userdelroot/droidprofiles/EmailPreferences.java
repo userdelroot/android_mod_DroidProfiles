@@ -16,87 +16,130 @@
  * 
  */
 
-
 package fac.userdelroot.droidprofiles;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
+import android.view.KeyEvent;
+
 import fac.userdelroot.droidprofiles.pref.RingtonePref;
 import fac.userdelroot.droidprofiles.pref.VolumePref;
 
 public class EmailPreferences extends PreferenceActivity {
 
-    
     private static final String TAG = "EmailPreferences ";
+
     private RingtonePref mRingtone;
+
     private VolumePref mRingVolume;
 
     CheckBoxPreference mNotification, mLed, mRinger, mVibrate;
+
     ListPreference mNotifyIcon, mLedPattern, mLedColor, mVibratePattern;
+
     Notify pNotify;
-    
-    
-   
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		addPreferencesFromResource(R.xml.notification_pref);
-		
-		Bundle b = getIntent().getExtras();
-		pNotify = b.getParcelable("fac.userdelroot.droidprofiles.Notify");
 
-		
-		mNotification = (CheckBoxPreference) this.findPreference("notification_bar");
-		mLed = (CheckBoxPreference) this.findPreference("led_enabled");
-		mRinger = (CheckBoxPreference) this.findPreference("ringer_enabled");
-		mVibrate = (CheckBoxPreference) this.findPreference("vibrate_enabled");
-		mRingtone = (RingtonePref) this.findPreference("ringtone");
-		mRingVolume = (VolumePref) this.findPreference("ring_volume");
-		mNotifyIcon = (ListPreference) this.findPreference("notification_bar_icon");
-		mLedPattern = (ListPreference) this.findPreference("led_pattern");
-		mLedColor = (ListPreference) this.findPreference("led_color");
-		mVibratePattern = (ListPreference) this.findPreference("vibrate_pattern");
-		
-		if (mNotification == null || mLed == null || mRinger == null || mVibrate == null || mRingtone == null || mRingVolume == null 
-		         || mNotifyIcon == null || mLedPattern == null || mLedColor == null || mVibratePattern == null) {
-		    if (Log.LOGV) 
-		        Log.e(TAG + "One of our preferences has a null pointer and none of  them should be null\n bailing...");
-		    finish();
-		}
-		    
-		
-		loadDefaultValues();
-		
-		
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        addPreferencesFromResource(R.xml.notification_pref);
 
+        Bundle b = getIntent().getExtras();
+        pNotify = b.getParcelable("fac.userdelroot.droidprofiles.Notify");
+
+        mNotification = (CheckBoxPreference) this.findPreference("notification_bar");
+        mNotifyIcon = (ListPreference) this.findPreference("notification_bar_icon");
+        mLed = (CheckBoxPreference) this.findPreference("led_enabled");
+        mLedPattern = (ListPreference) this.findPreference("led_pattern");
+        mLedColor = (ListPreference) this.findPreference("led_color");
+        mRinger = (CheckBoxPreference) this.findPreference("ringer_enabled");
+        mRingtone = (RingtonePref) this.findPreference("ringtone");
+        mRingVolume = (VolumePref) this.findPreference("ring_volume");
+        mVibrate = (CheckBoxPreference) this.findPreference("vibrate_enabled");
+        mVibratePattern = (ListPreference) this.findPreference("vibrate_pattern");
+
+        if (mNotification == null || mLed == null || mRinger == null || mVibrate == null
+                || mRingtone == null || mRingVolume == null || mNotifyIcon == null
+                || mLedPattern == null || mLedColor == null || mVibratePattern == null) {
+            if (Log.LOGV)
+                Log.e(TAG
+                        + "One of our preferences has a null pointer and none of  them should be null\n bailing...");
+            finish();
+            return;
+        }
+
+        loadDefaultValues();
+    }
 
     /**
      * Loads the default values if we have them if not then blank it all out
      */
     private void loadDefaultValues() {
         try {
-            mNotification.setChecked((pNotify.notify_active == true) ? true : false);
-            mLed.setChecked((pNotify.led_active == true) ? true : false);
-            mRinger.setChecked((pNotify.ringer_active == true) ? true : false);
-            mVibrate.setChecked((pNotify.vibrate_active == true) ? true : false);
+            mNotification.setChecked(pNotify.notify_active);
+            mLed.setChecked(pNotify.led_active);
+            mRinger.setChecked(pNotify.ringer_active);
+            mVibrate.setChecked(pNotify.vibrate_active);
             mRingtone.setRingtone(Uri.parse(pNotify.ringtone));
             mRingVolume.setVolume(pNotify.ringer_vol);
-            // XXX need to set this from the parcel but what should be saved to the parcel? a string or an index value? 
-            mNotifyIcon.setValueIndex(1);
-            mLedPattern.setValueIndex(3);
-            mLedColor.setValueIndex(1);
-            mVibratePattern.setValueIndex(3);
-        }
-        catch (NullPointerException e) {
+
+            if (mNotifyIcon.findIndexOfValue(pNotify.notify_icon) > -1)
+                mNotifyIcon.setValueIndex(mNotifyIcon.findIndexOfValue(pNotify.notify_icon));
+
+            if (mLedPattern.findIndexOfValue(pNotify.led_pat) > -1)
+                mLedPattern.setValueIndex(mLedPattern.findIndexOfValue(pNotify.led_pat));
+
+            if (mLedColor.findIndexOfValue(pNotify.led_color) > -1)
+                mLedColor.setValueIndex(mLedColor.findIndexOfValue(pNotify.led_color));
+
+            if (mVibratePattern.findIndexOfValue(pNotify.vibrate_pat) > -1)
+                mVibratePattern.setValueIndex(mVibratePattern.findIndexOfValue(pNotify.vibrate_pat));
+
+        } catch (NullPointerException e) {
             if (Log.LOGV)
-                Log.e(TAG + "Null pointer exception" + e.getLocalizedMessage().toString());
+                Log.e(TAG + "Null pointer exception " + e.getLocalizedMessage().toString());
+        } catch (RuntimeException e) {
+
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                setParcelData();
+                finish();
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void setParcelData() {
+
+        try {
+            pNotify.notify_active = mNotification.isChecked();
+            pNotify.notify_icon = mNotifyIcon.getValue();
+            pNotify.led_active = mLed.isChecked();
+            pNotify.led_color = mLedColor.getValue();
+            pNotify.led_pat = mLedPattern.getValue();
+            pNotify.ringer_active = mRinger.isChecked();
+            pNotify.ringtone = mRingtone.getRingtone();
+            pNotify.ringer_vol = mRingVolume.getVolume();
+            pNotify.vibrate_active = mVibrate.isChecked();
+            pNotify.vibrate_pat = mVibratePattern.getValue();
+
+            Intent retIntent = new Intent();
+            retIntent.putExtra("fac.userdelroot.droidprofiles.Notify", pNotify);
+            setResult(RESULT_OK, retIntent);
+
+        } catch (NullPointerException e) {
+            if (Log.LOGV)
+                Log.e(TAG + "setParcelData null pointer " + e.getLocalizedMessage().toString());
+        }
+    }
 }
