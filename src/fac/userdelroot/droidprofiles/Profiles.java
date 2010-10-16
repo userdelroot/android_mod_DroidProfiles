@@ -85,7 +85,7 @@ public class Profiles {
 		Uri uri = Notify.Columns.CONTENT_URI;
 		Cursor cursor = null;
 		Notify notify = null;
-		
+		Log.e(TAG + "profileId " +profileId + " type " + type);
 		switch(type) {
 		case Notify.Columns.NOTIFY_TYPE_PHONE:
 			cursor = cr.query(Uri.withAppendedPath(uri, "phone/" + profileId), Notify.Columns.NOTIFY_COLUMNS, null, null, null);
@@ -98,7 +98,7 @@ public class Profiles {
 			}
 			return notify;
 		case Notify.Columns.NOTIFY_TYPE_SMS:
-cursor = cr.query(Uri.withAppendedPath(uri, "phone/" + profileId), Notify.Columns.NOTIFY_COLUMNS, null, null, null);
+cursor = cr.query(Uri.withAppendedPath(uri, "sms/" + profileId), Notify.Columns.NOTIFY_COLUMNS, null, null, null);
 			
 			if (cursor != null) {
 				if (cursor.moveToFirst()) {
@@ -108,7 +108,7 @@ cursor = cr.query(Uri.withAppendedPath(uri, "phone/" + profileId), Notify.Column
 			}
 			return notify;
 		case Notify.Columns.NOTIFY_TYPE_MMS:
-cursor = cr.query(Uri.withAppendedPath(uri, "phone/" + profileId), Notify.Columns.NOTIFY_COLUMNS, null, null, null);
+cursor = cr.query(Uri.withAppendedPath(uri, "mms/" + profileId), Notify.Columns.NOTIFY_COLUMNS, null, null, null);
 			
 			if (cursor != null) {
 				if (cursor.moveToFirst()) {
@@ -118,10 +118,11 @@ cursor = cr.query(Uri.withAppendedPath(uri, "phone/" + profileId), Notify.Column
 			}
 			return notify;			
 		case Notify.Columns.NOTIFY_TYPE_EMAIL:
-cursor = cr.query(Uri.withAppendedPath(uri, "phone/" + profileId), Notify.Columns.NOTIFY_COLUMNS, null, null, null);
+cursor = cr.query(Uri.withAppendedPath(uri, "email/" + profileId), Notify.Columns.NOTIFY_COLUMNS, null, null, null);
 			
 			if (cursor != null) {
 				if (cursor.moveToFirst()) {
+				    Log.i(cursor.getColumnName(Notify.Columns.LED_ACTIVE_INDEX));
 					notify = new Notify(cursor);
 				}
 				cursor.close();
@@ -129,7 +130,8 @@ cursor = cr.query(Uri.withAppendedPath(uri, "phone/" + profileId), Notify.Column
 			return notify;
 			
 		default: 
-			Log.e(TAG + " Unknown notify type " + type);
+		    if (Log.LOGV)
+		        Log.e(TAG + " Unknown notify type " + type);
 			return null;
 		}					
 	}
