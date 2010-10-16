@@ -192,7 +192,8 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
                 Notify.Columns.NOTIFY_TYPE_EMAIL);
         */
 
-        // if null we want all of them
+        // thread to get the data for the parcel. this can be done in the background and it keeps the interface snappy.
+        // TODO: should probably add some checks to make sure this completed?
             Thread t = new Thread() {
                 @Override
                 public void run() {
@@ -398,8 +399,23 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         // add the contacts
         addContacts();
 
+        addNotifies();
     }
+    
+    
+    /**
+     * AddNotify types
+     */
+    private void addNotifies() {
 
+        // these could be null so we check in Profiles.insertNotifies() 
+        Profiles.insertNotifies(getContentResolver(), pEmail, Notify.Columns.NOTIFY_TYPE_EMAIL, mProfileId);
+        Profiles.insertNotifies(getContentResolver(), pSms, Notify.Columns.NOTIFY_TYPE_SMS, mProfileId);
+        Profiles.insertNotifies(getContentResolver(), pMms, Notify.Columns.NOTIFY_TYPE_MMS, mProfileId);
+        Profiles.insertNotifies(getContentResolver(), pPhone, Notify.Columns.NOTIFY_TYPE_PHONE, mProfileId);
+    }
+    
+    
     /**
      * adds Contacts to the profile
      */
