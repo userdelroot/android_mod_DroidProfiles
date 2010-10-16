@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	android:key="notification_settings" android:title="Notification Setttings">
-			
-	<CheckBoxPreference android:key="notification_bar"
-		android:title="Notification Bar" />
-		
+			<CheckBoxPreference android:key="notification_bar" android:title="Notification Bar" ></CheckBoxPreference>
 	<ListPreference android:key="notification_bar_icon"
 		android:title="Icon" android:summary="Notification bar Icon"
 		android:dependency="notification_bar" android:layout="?android:attr/preferenceLayoutChild"
@@ -26,7 +23,7 @@
 
 	<PreferenceCategory android:key="ringer_settings"
 		android:title="Ringer Settings">
-		<CheckBoxPreference android:key="ringing_enabled"
+		<CheckBoxPreference android:key="ringer_enabled"
 			android:title="Ringing" android:summary="Turn ringer On / Off" />
 			
   <fac.userdelroot.droidprofiles.pref.RingtonePref android:key="ringtone" android:title="Select Ringtone" android:ringtoneType="all" android:showDefault="false" />
