@@ -122,7 +122,6 @@ cursor = cr.query(Uri.withAppendedPath(uri, "email/" + profileId), Notify.Column
 			
 			if (cursor != null) {
 				if (cursor.moveToFirst()) {
-				    Log.i(cursor.getColumnName(Notify.Columns.LED_ACTIVE_INDEX));
 					notify = new Notify(cursor);
 				}
 				cursor.close();
