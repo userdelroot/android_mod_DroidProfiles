@@ -135,12 +135,51 @@ public class Profiles {
         }
     }
 
+    
+    public static void insertNotifies(ContentResolver cr, Notify notify, int type,  long profileId) {
+        
+        // If we are null bailout quietly
+        if (notify == null)
+            return;
+        
+        ContentValues values = new ContentValues();
+        values.put(Notify.Columns.PROFILE_ID, profileId);
+        values.put(Notify.Columns.LED_ACTIVE, notify.led_active);
+        values.put(Notify.Columns.LED_COLOR, notify.led_color);
+        values.put(Notify.Columns.LED_PAT, notify.led_pat);
+        values.put(Notify.Columns.NOTIFY_ACTIVE, notify.notify_active);
+        values.put(Notify.Columns.NOTIFY_ICON, notify.notify_icon);
+        values.put(Notify.Columns.NOTIFY_TYPE, type);
+        values.put(Notify.Columns.RINGER_ACTIVE, notify.ringer_active);
+        values.put(Notify.Columns.RINGER_VOL, notify.ringer_vol);
+        values.put(Notify.Columns.RINGTONE, notify.ringtone);
+        values.put(Notify.Columns.TB_ACTIVE, 0);
+        values.put(Notify.Columns.TB_COLOR, "notused");
+        values.put(Notify.Columns.TB_PAT, "notused");
+        values.put(Notify.Columns.VIBRATE_ACTIVE, notify.vibrate_active);
+        values.put(Notify.Columns.VIBRATE_PAT, notify.vibrate_pat);
+        
+        // check if there is a valid profile_id associated with this notify type
+      
+        
+       // check if only need to update
+       if (notify.profile_id > 0) { 
+           
+           // need updating
+           cr.update(ContentUris.withAppendedId(Notify.Columns.CONTENT_URI, notify.id), values, null, null);
+           return; 
+       }
+       
+       // need inserting
+       cr.insert(Notify.Columns.CONTENT_URI, values);
+       
+    }
+    
+    
     // TODO: fixme -
-    // this actually is supposed to be Profile.*
+    // this actually is supposed to be Profile.* parcelable
     // AddProfile changes the values in Profile and update will grab those new
-    // values
-
-    @SuppressWarnings("unchecked")
+    // values.  
     public static int saveProfile(ContentResolver resolver, HashMap<String, Comparable> profile) {
         ContentValues values = new ContentValues(profile.size());
         int id = Integer.parseInt(profile.get(Profile.Columns._ID).toString());
