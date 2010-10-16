@@ -32,8 +32,7 @@ public class Contacts {
 	public static class Columns implements BaseColumns {
 
 		// Uri for this table
-		public static final Uri CONTENT_URI = Uri
-				.parse("content://fac.userdelroot.droidprofiles/dpcontacts");
+		public static final Uri CONTENT_URI = Uri.parse("content://fac.userdelroot.droidprofiles/dpcontacts");
 
 		// Define tables
 		// _ID = index 0
