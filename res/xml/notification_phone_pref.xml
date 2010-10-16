@@ -17,7 +17,7 @@
 
 	<PreferenceCategory android:key="ringer_settings"
 		android:title="Ringer Settings">
-		<CheckBoxPreference android:key="ringing_enabled"
+		<CheckBoxPreference android:key="ringer_enabled"
 			android:title="Ringing" android:summary="Turn ringer On / Off" />
 			
  <fac.userdelroot.droidprofiles.pref.RingtonePref android:key="ringtone" android:title="Select Ringtone" android:ringtoneType="all" android:showDefault="false"/>
