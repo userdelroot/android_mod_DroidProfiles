@@ -9,4 +9,9 @@
 <string name="menu_cancel">Cancel</string>
 <string name="service_started">Started</string>
 <string name="service_stopped">Stopped</string>
+<string name="delete_confirm_dialog">Delete Profile</string>
+<string name="delete_confirm">This profile will be deleted</string>
+<string name="set_profile_active">Set Profile Active</string>
+<string name="edit_profile">Edit Profile</string>
+<string name="delete_profile">Delete Profile</string>
 </resources>
