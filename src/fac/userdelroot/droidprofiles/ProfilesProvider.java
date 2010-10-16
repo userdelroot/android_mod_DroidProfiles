@@ -417,7 +417,7 @@ public class ProfilesProvider extends ContentProvider {
 
 			rowId = db.insert(PROFILES_TBL, null, newValues);
 			if (rowId < 0)
-				throw new SQLException("failed to insert row " + uri);
+				throw new SQLException("failed to insert profiles row " + uri);
 			// update the insert row id
 			// this is used for profile_id to link tables
 			newUri = ContentUris.withAppendedId(Profile.Columns.CONTENT_URI,
@@ -428,7 +428,7 @@ public class ProfilesProvider extends ContentProvider {
 		case CONTACTS: {
 		    rowId = db.insert(CONTACTS_TBL, null, outValues);
 			if (rowId < 0)
-				throw new SQLException("failed to insert row " + uri);
+				throw new SQLException("failed to insert contacts row " + uri);
 			newUri = ContentUris.withAppendedId(Contacts.Columns.CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(newUri, null);
 		}
@@ -436,14 +436,14 @@ public class ProfilesProvider extends ContentProvider {
 		case NOTIFICATION: {
 			rowId = db.insert(NOTIFICATION_TBL, null, outValues);
 			if (rowId < 0)
-				throw new SQLException("failed to insert row " + uri);
+				throw new SQLException("failed to insert notification row " + uri);
 			newUri = ContentUris.withAppendedId(Notify.Columns.CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(newUri, null);
 		}
 		
 			break;
 		default:
-			throw new IllegalArgumentException("Cannot insert: " + uri);
+			throw new IllegalArgumentException("Cannot insert null: " + uri);
 		}
 		
 		if (Log.LOGV)
