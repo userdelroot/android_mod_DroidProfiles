@@ -20,15 +20,20 @@
 package fac.userdelroot.droidprofiles;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -106,7 +111,19 @@ public class ProfilesActivity extends Activity implements OnItemClickListener {
 
 		// set the lsitener
 		mList.setOnItemClickListener(this);
+		mList.setOnCreateContextMenuListener(this);
+		
+/*		mList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+               // delete this profile and everything associated with it
+                Log.v("ID LONG PRESS " + id + " POSITION " + position);
+                
+                return true;
+            }
+        });
+        */
 	}
 
 	@Override
@@ -159,7 +176,45 @@ public class ProfilesActivity extends Activity implements OnItemClickListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void serviceOn(boolean b) {
+	
+	
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+
+        final int id = (int) info.id;
+        switch (item.getItemId()) {
+            case R.id.set_profile_active:
+                break;
+                
+            case R.id.edit_profile:
+                break;
+                
+            case R.id.delete_profile:
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.delete_confirm_dialog))
+                        .setMessage(getString(R.string.delete_confirm))
+                        .setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface d, int w) {
+
+                                        Log.i("Delete Profile");
+                                    }
+                                }).setNegativeButton(android.R.string.cancel, null).show();
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+	
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+        // Inflate the menu from xml.
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+
+    }
+
+    private void serviceOn(boolean b) {
 		
 		if (b) { 
             startService(new Intent(this, ProfileService.class));
@@ -167,7 +222,5 @@ public class ProfilesActivity extends Activity implements OnItemClickListener {
 		}
         stopService(new Intent(this, ProfileService.class));
 	}
-
-	
 	
 }
