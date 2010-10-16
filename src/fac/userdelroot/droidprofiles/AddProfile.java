@@ -53,14 +53,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
     private static final int MENU_CANCEL = Menu.FIRST + 1;
 
-    private static final int NOTIFY_PHONE = Notify.Columns.NOTIFY_TYPE_PHONE;
-
-    private static final int NOTIFY_SMS = Notify.Columns.NOTIFY_TYPE_SMS;
-
-    private static final int NOTIFY_MMS = Notify.Columns.NOTIFY_TYPE_MMS;
-
-    private static final int NOTIFY_EMAIL = Notify.Columns.NOTIFY_TYPE_EMAIL;
-
     // variables
     private static final String KEY_PROFILE_NAME = "profile_name";
 
@@ -101,6 +93,12 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
     private Notify pEmail;
 
+    private static final int EMAIL_RESULT = 10;
+    private static final int SMS_RESULT = 11;
+    private static final int MMS_RESULT = 12;
+    private static final int PHONE_RESULT = 13;
+    
+    
     @SuppressWarnings("unchecked")
     private static final HashMap<String, Comparable> mProfile = new HashMap<String, Comparable>();
 
@@ -136,7 +134,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         if (mProfName == null || mProfActive == null || mProfSilent == null || mProfVibrate == null
                 || mProfRing == null || mProfOverride == null || mProfCustom == null
                 || mContactScreen == null || mProfRingtone == null || mProfRingVolume == null) {
-            Log.e(this.getClass().getSimpleName().toString()
+            Log.e(TAG + this.getClass().getSimpleName().toString()
                     + " something is borked!!! bail bail bail!!!!!!!");
 
             // bail bail bail
@@ -146,7 +144,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         // same as above
         if (mEmailNotify == null || mSmsNotify == null || mMmsNotify == null
                 || mPhoneNotify == null) {
-            Log.e(this.getClass().getSimpleName().toString()
+            Log.e(TAG + this.getClass().getSimpleName().toString()
                     + " something is borked!!! bail bail bail!!!!!!!");
             finish();
             return;
@@ -168,17 +166,33 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         loadDefaultValues();
 
         // we want all of them
-        getNotification(null);
+        setNotifyParcels();
     }
 
-    private void getNotification(Integer notifyType) {
+    /**
+     * getNotification thread runner to load our parcels
+     * TODO: i really hate "Loading" screens so need to do checks to make sure we grabbed this info.
+     * Maybe do this some place else?
+     * @param notifyType
+     */
+    private void setNotifyParcels() {
 
-        // this needs to be a valid ID or we are creating a new profile
+        // this needs to be a valid ID 
+        // If it is not we return because this is a new profile
         if (mProfileId <= 0)
             return;
+        /*
+        pPhone = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
+                Notify.Columns.NOTIFY_TYPE_PHONE);
+        pSms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
+                Notify.Columns.NOTIFY_TYPE_SMS);
+        pMms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
+                Notify.Columns.NOTIFY_TYPE_MMS);
+        pEmail = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
+                Notify.Columns.NOTIFY_TYPE_EMAIL);
+        */
 
         // if null we want all of them
-        if (notifyType == null) {
             Thread t = new Thread() {
                 @Override
                 public void run() {
@@ -193,7 +207,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
                 }
             };
             t.start();
-        }
 
     }
 
@@ -373,7 +386,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         mProfile.put(Profile.Columns.RING_VOL, mProfRingVolume.getVolume());
 
         if (Log.LOGV)
-            Log.v("AddProfile->saveProfile " + mProfile.toString());
+            Log.v(TAG + "saveProfile " + mProfile.toString());
         // if this profile is valid we are just editing
         if (mProfileId > 0) {
             Profiles.saveProfile(getContentResolver(), mProfile);
@@ -543,7 +556,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         if (pref == mEmailNotify) {
 
             if (Log.LOGV)
-                Log.v("email notify click start intent");
+                Log.i(TAG + "email notify click start intent");
 
             // if this is null, this is either a new profile or profile has no
             // notifications
@@ -552,12 +565,12 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
             Intent intent = new Intent(this, EmailPreferences.class);
             intent.putExtra("fac.userdelroot.droidprofiles.Notify", pEmail);
-            startActivity(intent);
+            startActivityForResult(intent,EMAIL_RESULT);
             return true;
         }
         if (pref == mSmsNotify) {
             if (Log.LOGV)
-                Log.v("sms notify click start intent");
+                Log.i(TAG + "sms notify click start intent");
 
             // if this is null, this is either a new profile or profile has no
             // notifications
@@ -566,13 +579,13 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
             Intent intent = new Intent(this, SMSPreferences.class);
             intent.putExtra("fac.userdelroot.droidprofiles.Notify", pSms);
-            startActivity(intent);
+            startActivityForResult(intent,SMS_RESULT);
 
             return true;
         }
         if (pref == mMmsNotify) {
             if (Log.LOGV)
-                Log.v("mms notify click start intent");
+                Log.i(TAG + "mms notify click start intent");
 
             // if this is null, this is either a new profile or profile has no
             // notifications
@@ -581,13 +594,13 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
             Intent intent = new Intent(this, MMSPreferences.class);
             intent.putExtra("fac.userdelroot.droidprofiles.Notify", pMms);
-            startActivity(intent);
+            startActivityForResult(intent, MMS_RESULT);
 
             return true;
         }
         if (pref == mPhoneNotify) {
             if (Log.LOGV)
-                Log.v("phone notify click start intent");
+                Log.i(TAG + "phone notify click start intent");
 
             // if this is null, this is either a new profile or profile has no
             // notifications
@@ -596,11 +609,39 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
             Intent intent = new Intent(this, PhonePreferences.class);
             intent.putExtra("fac.userdelroot.droidprofiles.Notify", pPhone);
-            startActivity(intent);
+            startActivityForResult(intent, PHONE_RESULT);
             return true;
         }
 
         return true;
+    }
+
+
+    
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case EMAIL_RESULT:
+                    pEmail = data.getParcelableExtra("fac.userdelroot.droidprofiles.Notify");
+                    break;
+                case SMS_RESULT:
+                    pSms = data.getParcelableExtra("fac.userdelroot.droidprofiles.Notify");
+                    break;
+                case MMS_RESULT:
+                    pMms = data.getParcelableExtra("fac.userdelroot.droidprofiles.Notify");
+                    break;
+                case PHONE_RESULT:
+                    pPhone = data.getParcelableExtra("fac.userdelroot.droidprofiles.Notify");
+                    break;
+
+            }
+        }
+        
+     //   if (Log.LOGV)
+     //       Log.v(TAG + " onActivityResult " + data.getParcelableExtra("fac.userdelroot.droidprofiles.Notify").toString());
     }
 
     /**
