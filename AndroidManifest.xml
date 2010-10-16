@@ -39,15 +39,15 @@
 					<action android:name="android.intent.action.DATA_SMS_RECEIVED" />
 				</intent-filter>
 			</receiver>
-			<activity android:name="AddProfile" android:launchMode="singleTask"></activity>
+			<activity android:name=".AddProfile" android:launchMode="singleTask"></activity>
 
 
-			<activity android:name="ContactsActivity" android:launchMode="singleTask"></activity>
+			<activity android:name=".ContactsActivity" android:launchMode="singleTask"></activity>
 			<!-- This can not be a singleTask or onActivityResult gets borked! -->
-		<activity android:name="EmailPreferences"></activity>
-		<activity android:name="SMSPreferences"></activity>
-		<activity android:name="MMSPreferences"></activity>
-		<activity android:name="PhonePreferences"></activity>
+		<activity android:name=".EmailPreferences"></activity>
+		<activity android:name=".SMSPreferences"></activity>
+		<activity android:name=".MMSPreferences"></activity>
+		<activity android:name=".PhonePreferences"></activity>
 </application>
 		<uses-sdk android:minSdkVersion="8" />
 
