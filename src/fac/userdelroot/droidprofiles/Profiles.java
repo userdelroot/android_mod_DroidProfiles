@@ -207,24 +207,22 @@ public class Profiles {
     // this actually is supposed to be Profile.* parcelable
     // AddProfile changes the values in Profile and update will grab those new
     // values.  
-    public static int saveProfile(ContentResolver resolver, HashMap<String, Comparable> profile) {
-        ContentValues values = new ContentValues(profile.size());
-        int id = Integer.parseInt(profile.get(Profile.Columns._ID).toString());
+    public static int saveProfile(ContentResolver resolver, Profile profile) {
+        ContentValues values = new ContentValues();
+        int id = profile.id;
 
         if (Log.LOGV)
             Log.i(TAG + "->saveProfile->profile " + profile.toString());
 
-        values.put(Profile.Columns.NAME, profile.get(Profile.Columns.NAME).toString());
-        values.put(Profile.Columns.ACTIVE, profile.get(Profile.Columns.ACTIVE).toString());
-        values.put(Profile.Columns.SILENT, profile.get(Profile.Columns.SILENT).toString());
-        values.put(Profile.Columns.VIBRATE, profile.get(Profile.Columns.VIBRATE).toString());
-        values.put(Profile.Columns.RINGER, profile.get(Profile.Columns.RINGER).toString());
-        values.put(Profile.Columns.RINGTONE, profile.get(Profile.Columns.RINGTONE).toString());
-        values.put(Profile.Columns.RING_VOL, profile.get(Profile.Columns.RING_VOL).toString());
-        values.put(Profile.Columns.OVERRIDES, profile.get(Profile.Columns.OVERRIDES).toString());
-        values.put(Profile.Columns.CUSTOM_NOTIFY, profile.get(Profile.Columns.CUSTOM_NOTIFY)
-                .toString());
-        profile.clear();
+        values.put(Profile.Columns.NAME, profile.name);
+        values.put(Profile.Columns.ACTIVE, profile.active);
+        values.put(Profile.Columns.SILENT, profile.silent);
+        values.put(Profile.Columns.VIBRATE, profile.vibrate);
+        values.put(Profile.Columns.RINGER, profile.ringer);
+        values.put(Profile.Columns.RINGTONE, profile.ringtone);
+        values.put(Profile.Columns.RING_VOL, profile.ringvolume);
+        values.put(Profile.Columns.OVERRIDES, profile.override);
+        values.put(Profile.Columns.CUSTOM_NOTIFY, profile.custom_notify);
 
         if (id > 0) {
 
@@ -267,7 +265,11 @@ public class Profiles {
      * @param profileId
      */
     public static void deleteNotifies(ContentResolver cr, long profileId) {
-        cr.delete(ContentUris.withAppendedId(Notify.Columns.CONTENT_URI, profileId), null, null);
+        Uri uri = Notify.Columns.CONTENT_URI;
+        cr.delete(Uri.withAppendedPath(uri, "phone/" + profileId),null,null);
+        cr.delete(Uri.withAppendedPath(uri, "email/" + profileId),null,null);
+        cr.delete(Uri.withAppendedPath(uri, "sms/" + profileId),null,null);
+        cr.delete(Uri.withAppendedPath(uri, "mms/" + profileId),null,null);
     }
     
     /**
