@@ -14,4 +14,5 @@
 <string name="set_profile_active">Set Profile Active</string>
 <string name="edit_profile">Edit Profile</string>
 <string name="delete_profile">Delete Profile</string>
+<string name="profile_deleted">The profile has been deleted</string>
 </resources>
