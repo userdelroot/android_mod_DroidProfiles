@@ -72,20 +72,17 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
     private VolumePref mProfRingVolume;
 
     // private vars
-    private long mProfileId;
+    private Profile mProfile;
     private Notify pPhone;
     private Notify pSms;
     private Notify pMms;
     private Notify pEmail;
+    
     private static final int EMAIL_RESULT = 10;
     private static final int SMS_RESULT = 11;
     private static final int MMS_RESULT = 12;
     private static final int PHONE_RESULT = 13;
     
-    
-    @SuppressWarnings("unchecked")
-    private static final HashMap<String, Comparable> mProfile = new HashMap<String, Comparable>();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +138,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         // mListOverrides.setOnPreferenceClickListener(this);
 
         // initialize our profileID if there is one
-        getIntentID();
+        getProfileData();
 
         // clear helpercontacts
         HelperContacts.clearAll();
@@ -150,49 +147,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         loadDefaultValues();
 
         // we want all of them
-        setNotifyParcels();
-    }
-
-    /**
-     * getNotification thread runner to load our parcels
-     * TODO: i really hate "Loading" screens so need to do checks to make sure we grabbed this info.
-     * Maybe do this some place else?
-     * @param notifyType
-     */
-    private void setNotifyParcels() {
-
-        // this needs to be a valid ID 
-        // If it is not we return because this is a new profile
-        if (mProfileId <= 0)
-            return;
-        /*
-        pPhone = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                Notify.Columns.NOTIFY_TYPE_PHONE);
-        pSms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                Notify.Columns.NOTIFY_TYPE_SMS);
-        pMms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                Notify.Columns.NOTIFY_TYPE_MMS);
-        pEmail = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                Notify.Columns.NOTIFY_TYPE_EMAIL);
-        */
-
-        // thread to get the data for the parcel. this can be done in the background and it keeps the interface snappy.
-        // TODO: should probably add some checks to make sure this completed?
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    pPhone = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                            Notify.Columns.NOTIFY_TYPE_PHONE);
-                    pSms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                            Notify.Columns.NOTIFY_TYPE_SMS);
-                    pMms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                            Notify.Columns.NOTIFY_TYPE_MMS);
-                    pEmail = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                            Notify.Columns.NOTIFY_TYPE_EMAIL);
-                }
-            };
-            t.start();
-
+        getNotifyParcels();
     }
 
     /**
@@ -216,47 +171,45 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
     }
 
     /**
-     * get the intent extras (profile._id) This will return a valid ID if a
-     * profile is being edited if not it will return -1 which is invalid and
-     * build the default values manually
+     * get profile data.  if a valid profile id was sent in the intent
+     * we will grab the profile. 
+     * If not this is a new profile
      */
-    private void getIntentID() {
+    private void getProfileData() {
 
         Intent intent = getIntent();
         // get id
-        mProfileId = intent.getLongExtra(Profiles.PROFILE_ID, -1);
+        long id = intent.getLongExtra(Profiles.PROFILE_ID, -1);
+        
+        if (id > 0)
+            mProfile = Profiles.getProfileByID(getContentResolver(), (int) id);
+        else 
+            mProfile = new Profile();
     }
 
     private void loadDefaultValues() {
 
-        // If the Id is valid we have a valid profile to edit
-        // if it is invalid we have a new profile to create
-        if (mProfileId > 0) { // is id valid?
+        // Check if we have a valid profile or not
+        if (mProfile != null) {
 
-            Profile profile = Profiles.getProfileByID(getContentResolver(), (int) mProfileId);
-            // this should never be null here because there is a valid
-            // profile._ID
-            // but check it anyways in case something gets borked!
-            if (profile != null) {
+            // We are editing a profile
 
-                // We are editing a profile
+            // set the values from the database
+            mProfName.setText(mProfile.name);
+            mProfActive.setChecked(mProfile.active);
+            mProfSilent.setChecked(mProfile.silent);
+            mProfVibrate.setChecked(mProfile.vibrate);
+            mProfRing.setChecked(mProfile.ringer);
+            mProfRingVolume.setVolume((int) mProfile.ringvolume);
 
-                // set the values from the database
-                mProfName.setText(profile.name);
-                mProfActive.setChecked(profile.active);
-                mProfSilent.setChecked(profile.silent);
-                mProfVibrate.setChecked(profile.vibrate);
-                mProfRing.setChecked(profile.ringer);
-                mProfRingtone.setRingtone(Uri.parse(profile.ringtone));
-                mProfRingVolume.setVolume((int) profile.ringvolume);
-                mProfRingVolume.setRingtone(Uri.parse(profile.ringtone));
-                mProfOverride.setChecked(profile.override);
-                mProfCustom.setChecked(profile.custom_notify);
-
-                // set default name because this is an edit
-                mProfile.put(Profile.Columns.NAME, profile.name);
-
+            if (mProfile.ringtone != null) {
+                mProfRingtone.setRingtone(Uri.parse(mProfile.ringtone));
+                mProfRingVolume.setRingtone(Uri.parse(mProfile.ringtone));
             }
+            
+            mProfOverride.setChecked(mProfile.override);
+            mProfCustom.setChecked(mProfile.custom_notify);
+
         } else {
 
             // We are creating a new profile
@@ -270,22 +223,49 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
             mProfRingVolume.setRingtone(null);
             mProfOverride.setChecked(false);
             mProfCustom.setChecked(false);
-
-            // Load override profile list
-
         }
+    }
+    
+    /**
+     * getNotification thread runner to load our parcels
+     * TODO: i really hate "Loading" screens so need to do checks to make sure we grabbed this info.
+     * Maybe do this some place else?
+     * @param notifyType
+     */
+    private void getNotifyParcels() {
 
-        // set the intial values for a LinkedHaskMap (mProfile)
-        mProfile.put(Profile.Columns._ID, mProfileId); // set for edits.
+        // this needs to be a valid ID 
+        // If it is not we return because this is a new profile
+        if (mProfile.id <= 0)
+            return;
+        /*
+        pPhone = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
+                Notify.Columns.NOTIFY_TYPE_PHONE);
+        pSms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
+                Notify.Columns.NOTIFY_TYPE_SMS);
+        pMms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
+                Notify.Columns.NOTIFY_TYPE_MMS);
+        pEmail = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
+                Notify.Columns.NOTIFY_TYPE_EMAIL);
+        */
 
-        mProfile.put(Profile.Columns.ACTIVE, mProfActive.isChecked() ? 1 : 0);
-        mProfile.put(Profile.Columns.SILENT, mProfSilent.isChecked() ? 1 : 0);
-        mProfile.put(Profile.Columns.VIBRATE, mProfVibrate.isChecked() ? 1 : 0);
-        mProfile.put(Profile.Columns.RINGER, mProfRing.isChecked() ? 1 : 0);
-        mProfile.put(Profile.Columns.RINGTONE, mProfRingtone.getRingtone());
-        mProfile.put(Profile.Columns.RING_VOL, mProfRingVolume.getVolume());
-        mProfile.put(Profile.Columns.OVERRIDES, mProfOverride.isChecked() ? 1 : 0);
-        mProfile.put(Profile.Columns.CUSTOM_NOTIFY, mProfCustom.isChecked() ? 1 : 0);
+        // thread to get the data for the parcel. this can be done in the background and it keeps the interface snappy.
+        // TODO: should probably add some checks to make sure this completed?
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    pPhone = Profiles.getNotifyByProfileId(getContentResolver(), mProfile.id,
+                            Notify.Columns.NOTIFY_TYPE_PHONE);
+                    pSms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfile.id,
+                            Notify.Columns.NOTIFY_TYPE_SMS);
+                    pMms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfile.id,
+                            Notify.Columns.NOTIFY_TYPE_MMS);
+                    pEmail = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfile.id,
+                            Notify.Columns.NOTIFY_TYPE_EMAIL);
+                }
+            };
+            t.start();
+
     }
 
     /*
@@ -299,9 +279,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         if (pref == mProfName) {
 
-            // store it
-            mProfile.put(Profile.Columns.NAME, newValue.toString());
-
+            mProfile.name = newValue.toString();
             // Change Summary to reflect our changes
             // TODO: Add this to the string resource file to format the text
             mProfName.setSummary(newValue.toString());
@@ -363,21 +341,21 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
      */
     private void saveProfile() {
         // need to grab the ringtone -)
-        if (mProfRingtone.getRingtone() != null)
-            mProfile.put(Profile.Columns.RINGTONE, mProfRingtone.getRingtone());
-        else
-            mProfile.put(Profile.Columns.RINGTONE, "");
+        if (mProfRingtone.getRingtone() != null) {
+            mProfile.ringtone =  mProfRingtone.getRingtone();
+        }
+        else {
+            mProfile.ringtone = "";
+        }
         // grab the volume
-        mProfile.put(Profile.Columns.RING_VOL, mProfRingVolume.getVolume());
+        mProfile.ringvolume = mProfRingVolume.getVolume();
 
-        if (Log.LOGV)
-            Log.v(TAG + "saveProfile " + mProfile.toString());
         // if this profile is valid we are just editing
-        if (mProfileId > 0) {
+        if (mProfile.id > 0) {
             Profiles.saveProfile(getContentResolver(), mProfile);
         } else {
             // we are creating new profile get profileID
-            mProfileId = Profiles.saveProfile(getContentResolver(), mProfile);
+            mProfile.id = Profiles.saveProfile(getContentResolver(), mProfile);
         }
 
         // add the contacts
@@ -385,20 +363,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         addNotifies();
     }
-    
-    
-    /**
-     * AddNotify types
-     */
-    private void addNotifies() {
-
-        // these could be null so we check in Profiles.insertNotifies() 
-        Profiles.saveNotifies(getContentResolver(), pEmail, Notify.Columns.NOTIFY_TYPE_EMAIL, mProfileId);
-        Profiles.saveNotifies(getContentResolver(), pSms, Notify.Columns.NOTIFY_TYPE_SMS, mProfileId);
-        Profiles.saveNotifies(getContentResolver(), pMms, Notify.Columns.NOTIFY_TYPE_MMS, mProfileId);
-        Profiles.saveNotifies(getContentResolver(), pPhone, Notify.Columns.NOTIFY_TYPE_PHONE, mProfileId);
-    }
-    
     
     /**
      * adds Contacts to the profile
@@ -429,7 +393,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         // this contact does not want any contacts associated so delete em
         if (list.isEmpty()) {
-            Profiles.deleteContactsbyProfileId(getContentResolver(), mProfileId);
+            Profiles.deleteContactsbyProfileId(getContentResolver(), mProfile.id);
         }
 
         // first delete all contacts with real_id
@@ -441,7 +405,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         if (list.isEmpty() == false) {
 
             // delete all contacts associated with this profile
-            Profiles.deleteContactsbyProfileId(getContentResolver(), mProfileId);
+            Profiles.deleteContactsbyProfileId(getContentResolver(), mProfile.id);
 
             // delete all contacts associated with other profiles
             for (long real_id : list) {
@@ -451,13 +415,27 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
             // add all contacts to this profile
             for (long id : list) {
-                Profiles.saveContacts(getContentResolver(), mProfileId, id);
+                Profiles.saveContacts(getContentResolver(), mProfile.id, id);
             }
 
         }
 
     }
 
+    /**
+     * AddNotify types
+     */
+    private void addNotifies() {
+
+        // these could be null so we check in Profiles.insertNotifies() 
+        Profiles.saveNotifies(getContentResolver(), pEmail, Notify.Columns.NOTIFY_TYPE_EMAIL, mProfile.id);
+        Profiles.saveNotifies(getContentResolver(), pSms, Notify.Columns.NOTIFY_TYPE_SMS, mProfile.id);
+        Profiles.saveNotifies(getContentResolver(), pMms, Notify.Columns.NOTIFY_TYPE_MMS, mProfile.id);
+        Profiles.saveNotifies(getContentResolver(), pPhone, Notify.Columns.NOTIFY_TYPE_PHONE, mProfile.id);
+    }
+
+    
+    
     // TODO: Add strings to the string resource
     private void showCancelDialog() {
         new AlertDialog.Builder(this).setTitle("Dialog title")
@@ -505,58 +483,55 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         if (pref == mProfActive) {
 
-            mProfile.put(Profile.Columns.ACTIVE, mProfActive.isChecked() ? 1 : 0);
+            mProfile.active = mProfActive.isChecked();
             mProfActive.setSummary(mProfActive.isChecked() ? "yes" : "no");
 
             return true;
         }
 
         if (pref == mProfSilent) {
-            mProfile.put(Profile.Columns.SILENT, mProfSilent.isChecked() ? 1 : 0);
+            mProfile.silent = mProfSilent.isChecked();
 
             mProfSilent.setSummary(mProfSilent.isChecked() ? "yes" : "no");
             return true;
         }
 
         if (pref == mProfVibrate) {
-            mProfile.put(Profile.Columns.VIBRATE, mProfVibrate.isChecked() ? 1 : 0);
+            mProfile.vibrate = mProfVibrate.isChecked();
             mProfVibrate.setSummary(mProfVibrate.isChecked() ? "yes" : "no");
             return true;
         }
 
         if (pref == mProfRing) {
-            mProfile.put(Profile.Columns.RINGER, mProfRing.isChecked() ? 1 : 0);
+            mProfile.ringer = mProfRing.isChecked();
             mProfRing.setSummary(mProfRing.isChecked() ? "yes" : "no");
             return true;
         }
         if (pref == mProfOverride) {
-            mProfile.put(Profile.Columns.OVERRIDES, mProfOverride.isChecked() ? 1 : 0);
+            mProfile.override = mProfOverride.isChecked();
             mProfOverride.setSummary(mProfOverride.isChecked() ? "yes" : "no");
             return true;
         }
 
         if (pref == mProfRingVolume) {
-            mProfRingVolume.setVolume(Integer.valueOf(mProfile.get(Profile.Columns.RING_VOL)
-                    .toString()));
+            mProfRingVolume.setVolume(mProfile.ringvolume);
+            return true;
         }
 
         if (pref == mProfCustom) {
-            mProfile.put(Profile.Columns.CUSTOM_NOTIFY, mProfCustom.isChecked() ? 1 : 0);
+            mProfile.custom_notify = mProfCustom.isChecked();
             mProfCustom.setSummary(mProfCustom.isChecked() ? "yes" : "no");
             return true;
         }
 
         if (pref == mContactScreen) {
             Intent intent = new Intent(this, ContactsActivity.class);
-            intent.putExtra(Notify.Columns._ID, mProfileId);
+            intent.putExtra(Notify.Columns._ID, mProfile.id);
             startActivity(intent);
             return true;
         }
 
         if (pref == mEmailNotify) {
-
-            if (Log.LOGV)
-                Log.i(TAG + "email notify click start intent");
 
             // if this is null, this is either a new profile or profile has no
             // notifications
@@ -569,8 +544,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
             return true;
         }
         if (pref == mSmsNotify) {
-            if (Log.LOGV)
-                Log.i(TAG + "sms notify click start intent");
 
             // if this is null, this is either a new profile or profile has no
             // notifications
@@ -584,8 +557,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
             return true;
         }
         if (pref == mMmsNotify) {
-            if (Log.LOGV)
-                Log.i(TAG + "mms notify click start intent");
 
             // if this is null, this is either a new profile or profile has no
             // notifications
@@ -599,8 +570,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
             return true;
         }
         if (pref == mPhoneNotify) {
-            if (Log.LOGV)
-                Log.i(TAG + "phone notify click start intent");
 
             // if this is null, this is either a new profile or profile has no
             // notifications
@@ -613,7 +582,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
             return true;
         }
 
-        return true;
+        return false;
     }
 
 
