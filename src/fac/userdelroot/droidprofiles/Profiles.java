@@ -54,6 +54,12 @@ public class Profiles {
         return cursor;
     }
 
+    /**
+     * Get profile by id
+     * @param cr
+     * @param id
+     * @return
+     */
     public static Profile getProfileByID(ContentResolver cr, int id) {
 
         Cursor cursor = cr.query(ContentUris.withAppendedId(Profile.Columns.CONTENT_URI, id),
@@ -63,12 +69,33 @@ public class Profiles {
             if (cursor.moveToFirst()) {
                 profile = new Profile(cursor);
             }
-            cursor.close();
+           cursor.close();
         }
 
         return profile;
     }
+    
+    /**
+     * Get contacts
+     * @param cr
+     * @param profileId
+     * @return
+     */
+    public static Cursor getContacts(ContentResolver cr, long profileId) {
+        // invalid profile id
+        if (profileId > 0) {
+            // Uri uri = Overrides.Columns.CONTENT_URI;
+            Cursor cursor = cr.query(
+                    Uri.withAppendedPath(Contacts.Columns.CONTENT_URI, "profiles/" + profileId),
+                    Contacts.Columns.CONTACTS_COLUMNS, null, null, null);
 
+            return cursor;
+
+        }
+        return null;
+
+    }
+    
     /**
      * Get the notification type by the profileId and type
      * 
@@ -136,7 +163,7 @@ public class Profiles {
     }
 
     
-    public static void insertNotifies(ContentResolver cr, Notify notify, int type,  long profileId) {
+    public static void saveNotifies(ContentResolver cr, Notify notify, int type,  long profileId) {
         
         // If we are null bailout quietly
         if (notify == null)
@@ -210,14 +237,54 @@ public class Profiles {
         return Integer.valueOf(newUri.getPathSegments().get(1));
     }
 
+
+
+    public static void saveContacts(ContentResolver cr, long profileId, long contact_id) {
+        ContentValues values = new ContentValues();
+        values.put(Contacts.Columns.PROFILE_ID, profileId);
+        values.put(Contacts.Columns.REAL_ID, contact_id);
+        values.put(Contacts.Columns.EMAIL, "none");
+        values.put(Contacts.Columns.NAME, "none");
+        values.put(Contacts.Columns.PHONE, "none");
+        cr.insert(Contacts.Columns.CONTENT_URI, values);
+    }
+
+
     /**
-     * Contacts
+     * Delete profile
+     * @param cr
+     * @param profileId
+     */
+    public static void deleteProfile(ContentResolver cr, long profileId) {
+        cr.delete(ContentUris.withAppendedId(Profile.Columns.CONTENT_URI, profileId), null, null);
+        deleteContactsbyProfileId(cr, profileId);
+        deleteNotifies(cr, profileId);
+    }
+    
+    /**
+     * Delete notifies by profile id
+     * @param cr
+     * @param profileId
+     */
+    public static void deleteNotifies(ContentResolver cr, long profileId) {
+        cr.delete(ContentUris.withAppendedId(Notify.Columns.CONTENT_URI, profileId), null, null);
+    }
+    
+    /**
+     * Delete contacts by profile id
+     * @param cr
+     * @param profileId
      */
     public static void deleteContactsbyProfileId(ContentResolver cr, long profileId) {
         cr.delete(Uri.withAppendedPath(Contacts.Columns.CONTENT_URI, "profiles/" + profileId),
                 null, null);
     }
 
+    /**
+     * Delete contacts by real contact id
+     * @param cr
+     * @param real_id
+     */
     public static void delContactsByRealId(ContentResolver cr, long real_id) {
         int numRows = 0;
 
@@ -228,30 +295,5 @@ public class Profiles {
         if (Log.LOGV)
             Log.i(TAG + "->delContactsByReadId number of rows affected " + numRows + " for id "
                     + real_id);
-    }
-
-    public static void insertContacts(ContentResolver cr, long profileId, long contact_id) {
-        ContentValues values = new ContentValues();
-        values.put(Contacts.Columns.PROFILE_ID, profileId);
-        values.put(Contacts.Columns.REAL_ID, contact_id);
-        values.put(Contacts.Columns.EMAIL, "none");
-        values.put(Contacts.Columns.NAME, "none");
-        values.put(Contacts.Columns.PHONE, "none");
-        cr.insert(Contacts.Columns.CONTENT_URI, values);
-    }
-
-    public static Cursor getContacts(ContentResolver cr, long profileId) {
-        // invalid profile id
-        if (profileId > 0) {
-            // Uri uri = Overrides.Columns.CONTENT_URI;
-            Cursor cursor = cr.query(
-                    Uri.withAppendedPath(Contacts.Columns.CONTENT_URI, "profiles/" + profileId),
-                    Contacts.Columns.CONTACTS_COLUMNS, null, null, null);
-
-            return cursor;
-
-        }
-        return null;
-
     }
 }
