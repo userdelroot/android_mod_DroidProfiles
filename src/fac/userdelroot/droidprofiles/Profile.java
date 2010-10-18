@@ -92,7 +92,7 @@ public final class Profile implements Parcelable {
 	public boolean vibrate;
 	public boolean ringer;
 	public String ringtone;
-	public float ringvolume;
+	public int ringvolume;
 	public boolean override;
 	public boolean custom_notify; // if this is true we check the sms, mms etc
 	// tables
@@ -107,7 +107,7 @@ public final class Profile implements Parcelable {
 		vibrate = c.getInt(Columns.VIBRATE_INDEX) == 1;
 		ringer = c.getInt(Columns.RINGER_INDEX) == 1;
 		ringtone = c.getString(Columns.RINGTONE_INDEX);
-		ringvolume = c.getFloat(Columns.RINGVOL_INDEX);
+		ringvolume = c.getInt(Columns.RINGVOL_INDEX);
 		override = c.getInt(Columns.OVERRIDE_INDEX) == 1;
 		custom_notify = c.getInt(Columns.CUSTOM_NOTIFY_INDEX) == 1;
 
@@ -136,11 +136,15 @@ public final class Profile implements Parcelable {
 		vibrate = p.readInt() == 1;
 		ringer = p.readInt() == 1;
 		ringtone = p.readString();
-		ringvolume = p.readFloat();
+		ringvolume = p.readInt();
 		override = p.readInt() == 1;
 		custom_notify = p.readInt() == 1;
 		uriRingTone = (Uri) p.readParcelable(null);
 
+	}
+	
+	public Profile() {
+	    
 	}
 
 	@Override
@@ -153,7 +157,7 @@ public final class Profile implements Parcelable {
 		p.writeInt(vibrate ? 1 : 0);
 		p.writeInt(ringer ? 1 : 0);
 		p.writeString(ringtone);
-		p.writeFloat(ringvolume);
+		p.writeInt(ringvolume);
 		p.writeInt(override ? 1 : 0);
 		p.writeInt(custom_notify ? 1 : 0);
 		p.writeParcelable(uriRingTone, flags);
