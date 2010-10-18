@@ -55,44 +55,28 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
     // variables
     private static final String KEY_PROFILE_NAME = "profile_name";
-
     private static final String KEY_PROFILE_ACTIVE = "profile_active";
-
     private static final String KEY_PROFILE_SILENT = "profile_silent";
-
     private static final String KEY_PROFILE_VIBRATE = "profile_vibrate";
-
     private static final String KEY_PROFILE_RING = "profile_ringer";
-
     private static final String KEY_RINGTONE = "profile_ringtone";
-
     private static final String KEY_PROFILE_OVERRIDE = "profile_override";
-
     private static final String KEY_PROFILE_CUSTOM = "profile_custom";
 
     // Preferernces
     private EditTextPreference mProfName;
-
     private CheckBoxPreference mProfActive, mProfSilent, mProfVibrate, mProfRing, mProfOverride,
             mProfCustom;
-
     private PreferenceScreen mEmailNotify, mSmsNotify, mMmsNotify, mPhoneNotify, mContactScreen;
-
     private RingtonePref mProfRingtone;
-
     private VolumePref mProfRingVolume;
 
     // private vars
     private long mProfileId;
-
     private Notify pPhone;
-
     private Notify pSms;
-
     private Notify pMms;
-
     private Notify pEmail;
-
     private static final int EMAIL_RESULT = 10;
     private static final int SMS_RESULT = 11;
     private static final int MMS_RESULT = 12;
@@ -409,10 +393,10 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
     private void addNotifies() {
 
         // these could be null so we check in Profiles.insertNotifies() 
-        Profiles.insertNotifies(getContentResolver(), pEmail, Notify.Columns.NOTIFY_TYPE_EMAIL, mProfileId);
-        Profiles.insertNotifies(getContentResolver(), pSms, Notify.Columns.NOTIFY_TYPE_SMS, mProfileId);
-        Profiles.insertNotifies(getContentResolver(), pMms, Notify.Columns.NOTIFY_TYPE_MMS, mProfileId);
-        Profiles.insertNotifies(getContentResolver(), pPhone, Notify.Columns.NOTIFY_TYPE_PHONE, mProfileId);
+        Profiles.saveNotifies(getContentResolver(), pEmail, Notify.Columns.NOTIFY_TYPE_EMAIL, mProfileId);
+        Profiles.saveNotifies(getContentResolver(), pSms, Notify.Columns.NOTIFY_TYPE_SMS, mProfileId);
+        Profiles.saveNotifies(getContentResolver(), pMms, Notify.Columns.NOTIFY_TYPE_MMS, mProfileId);
+        Profiles.saveNotifies(getContentResolver(), pPhone, Notify.Columns.NOTIFY_TYPE_PHONE, mProfileId);
     }
     
     
@@ -467,7 +451,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
             // add all contacts to this profile
             for (long id : list) {
-                Profiles.insertContacts(getContentResolver(), mProfileId, id);
+                Profiles.saveContacts(getContentResolver(), mProfileId, id);
             }
 
         }
