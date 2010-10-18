@@ -1,0 +1,166 @@
+2010-10-16  userdelroot <r00t316@gmail.com>
+
+  * res/menu/context_menu.xml: used to inflate the long click context menu
+
+  * .../droidprofiles/ProfilesActivity.java: added long click context menus for
+  activating editing and deleting profiles
+
+  * res/values/strings.xml: added strings for context menus
+
+  * src/fac/userdelroot/droidprofiles/Profiles.java: Added insertNotifies()
+
+  * src/fac/userdelroot/droidprofiles/AddProfile.java: added addNotifies()
+  method
+
+  * .../droidprofiles/ProfilesProvider.java: a missing break; in a switch arg\!
+
+  * .../droidprofiles/EmailPreferences.java,
+  .../userdelroot/droidprofiles/MMSPreferences.java,
+  .../droidprofiles/PhonePreferences.java,
+  .../userdelroot/droidprofiles/SMSPreferences.java: completed the activities
+  for email,sms,mms,phone preferences. Uses parcelable data and passes it back
+  to AddProfiles when completed
+
+  * src/fac/userdelroot/droidprofiles/AddProfile.java: changed to use
+  startActivityForResult(uses parecelable) and added onActivityResult override
+
+  * .../droidprofiles/ProfilesProvider.java: change color *_pattern stuff to
+  string / TEXT
+
+  * src/fac/userdelroot/droidprofiles/Profiles.java: removed some logging and
+  fixed some misc stuff.  formatting
+
+  * src/fac/userdelroot/droidprofiles/Notify.java: formatting and changed
+  *_pattern and color stuff to strings
+
+  * src/fac/userdelroot/droidprofiles/Contacts.java: formatting fix
+
+  * res/xml/notification_phone_pref.xml: fixed typos which causes null pointers
+
+  * AndroidManifest.xml: fixed some activity stuff
+
+  * src/fac/userdelroot/droidprofiles/Profiles.java: removed unneeded logging
+
+  * src/fac/userdelroot/droidprofiles/Profiles.java: fixed repeat of phone
+  which was causing null to return
+
+  * .../droidprofiles/ProfilesProvider.java: fixed error messages to provide
+  what insert threw the errro.... TODO: need to redo to use try / catch
+
+  * res/xml/notification_pref.xml: fixed typos which caused null pointers eek\!
+
+  * AndroidManifest.xml: Changed Email,Sms,Mms,Phone preferences to standard
+  launchmode.  If singleTask onActivityResult does not work
+
+2010-09-06  userdelroot <r00t316@gmail.com>
+
+  * Android.mk, res/xml/notification_phone_pref.xml,
+  .../droidprofiles/EmailPreferences.java,
+  .../userdelroot/droidprofiles/MMSPreferences.java,
+  .../droidprofiles/PhonePreferences.java,
+  .../userdelroot/droidprofiles/SMSPreferences.java: Added Android.mk,
+  notification_phone_pref.xml, EmailPreferences.java, MMSPreferences.java,
+  PhonePreferences.java, SMSPreferences.java
+
+  * .../droidprofiles/ProfilesProvider.java: Fixed URI AUTHORITY to use new
+  package name.  Changed float in int in DB
+
+  * .../userdelroot/droidprofiles/ProfilesData.java: fixed URI's to use new
+  package name
+
+  * src/fac/userdelroot/droidprofiles/Profile.java: fixed content uri to use
+  new package name
+
+  * src/fac/userdelroot/droidprofiles/Notify.java: fixed content uri to use new
+  package name.  Fixed ringer volume variable from Float to Int
+
+  * .../droidprofiles/NotificationPreferences.java: removed file. now replaced
+  with 4 files emailpref. smspref. etc
+
+  * src/fac/userdelroot/droidprofiles/Contacts.java: Fixed the Content uri to
+  the new package name
+
+  * src/fac/userdelroot/droidprofiles/AddProfile.java: Formatted code to remove
+  so newline characters.  Added intents for Notification Preferences to send
+  the parcelable of Notify.java to the preference, removed ActivityforResult
+  method, however I think I removed it on accident ?
+
+  * res/xml/notification_pref.xml: removed the default Ringtone and Volume
+  Preferences with custom ones
+
+  * AndroidManifest.xml: Removed NotificationPreferences activity and added
+  seperate preference activities for each notification type eg: sms, mms,
+  phone, email
+
+2010-08-24  userdelroot <r00t316@gmail.com>
+
+  * AndroidManifest.xml, res/xml/add_profile.xml,
+  src/com/fac/droidprofiles/AddProfile.java,
+  src/com/fac/droidprofiles/Contacts.java,
+  src/com/fac/droidprofiles/ContactsActivity.java,
+  src/com/fac/droidprofiles/HelperContacts.java,
+  src/com/fac/droidprofiles/Log.java,
+  src/com/fac/droidprofiles/ManagerNotification.java,
+  .../fac/droidprofiles/NotificationPreferences.java,
+  src/com/fac/droidprofiles/Notify.java,
+  src/com/fac/droidprofiles/Profile.java,
+  src/com/fac/droidprofiles/ProfileService.java,
+  src/com/fac/droidprofiles/Profiles.java,
+  src/com/fac/droidprofiles/ProfilesActivity.java,
+  src/com/fac/droidprofiles/ProfilesData.java,
+  src/com/fac/droidprofiles/ProfilesHelper.java,
+  src/com/fac/droidprofiles/ProfilesProvider.java,
+  src/com/fac/droidprofiles/ProfilesReceiver.java,
+  src/com/fac/droidprofiles/pref/ListPrefMulti.java,
+  src/com/fac/droidprofiles/pref/RingtonePref.java,
+  src/com/fac/droidprofiles/pref/VolumePref.java,
+  src/fac/userdelroot/droidprofiles/AddProfile.java,
+  src/fac/userdelroot/droidprofiles/Contacts.java,
+  .../droidprofiles/ContactsActivity.java,
+  .../userdelroot/droidprofiles/HelperContacts.java,
+  src/fac/userdelroot/droidprofiles/Log.java,
+  .../droidprofiles/ManagerNotification.java,
+  .../droidprofiles/NotificationPreferences.java,
+  src/fac/userdelroot/droidprofiles/Notify.java,
+  src/fac/userdelroot/droidprofiles/Profile.java,
+  .../userdelroot/droidprofiles/ProfileService.java,
+  src/fac/userdelroot/droidprofiles/Profiles.java,
+  .../droidprofiles/ProfilesActivity.java,
+  .../userdelroot/droidprofiles/ProfilesData.java,
+  .../userdelroot/droidprofiles/ProfilesHelper.java,
+  .../droidprofiles/ProfilesProvider.java,
+  .../droidprofiles/ProfilesReceiver.java,
+  .../droidprofiles/pref/ListPrefMulti.java,
+  .../droidprofiles/pref/RingtonePref.java,
+  .../userdelroot/droidprofiles/pref/VolumePref.java: Renamed packages from
+  com.fac.droidprofiles to fac.userdelroot.droidprofiles.   Also added header
+  info to code
+
+  * README: Copied the README from SysInfo and forgot to change the text, duh! 
+  Changed the text for to match this project.
+
+  * .classpath, .gitignore, .project, AndroidManifest.xml, LICENSE, README,
+  default.properties, res/drawable-hdpi/icon.png,
+  res/drawable-hdpi/stat_sample.png, res/drawable-ldpi/icon.png,
+  res/layout/contacts_activity.xml, res/layout/profiles_activity.xml,
+  res/layout/profiles_list.xml, res/layout/volumepref.xml,
+  res/values/arrays.xml, res/values/strings.xml, res/xml/add_profile.xml,
+  res/xml/notification_pref.xml, src/com/fac/droidprofiles/AddProfile.java,
+  src/com/fac/droidprofiles/Contacts.java,
+  src/com/fac/droidprofiles/ContactsActivity.java,
+  src/com/fac/droidprofiles/HelperContacts.java,
+  src/com/fac/droidprofiles/Log.java,
+  src/com/fac/droidprofiles/ManagerNotification.java,
+  .../fac/droidprofiles/NotificationPreferences.java,
+  src/com/fac/droidprofiles/Notify.java,
+  src/com/fac/droidprofiles/Profile.java,
+  src/com/fac/droidprofiles/ProfileService.java,
+  src/com/fac/droidprofiles/Profiles.java,
+  src/com/fac/droidprofiles/ProfilesActivity.java,
+  src/com/fac/droidprofiles/ProfilesData.java,
+  src/com/fac/droidprofiles/ProfilesHelper.java,
+  src/com/fac/droidprofiles/ProfilesProvider.java,
+  src/com/fac/droidprofiles/ProfilesReceiver.java,
+  src/com/fac/droidprofiles/pref/ListPrefMulti.java,
+  src/com/fac/droidprofiles/pref/RingtonePref.java,
+  src/com/fac/droidprofiles/pref/VolumePref.java: Added project to git
