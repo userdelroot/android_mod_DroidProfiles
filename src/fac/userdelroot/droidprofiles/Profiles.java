@@ -203,8 +203,23 @@ public class Profiles {
     }
     
     
-    // TODO: fixme -
-    // this actually is supposed to be Profile.* parcelable
+    public static void disableActiveProfiles(ContentResolver res) {
+        Uri uri = Profile.Columns.CONTENT_URI;
+        Cursor cur = res.query(Uri.withAppendedPath(uri, "active"), null, null, null, null);
+        
+        if (!cur.moveToFirst()) {
+            cur.close();
+            return;
+        }
+        while(cur.isAfterLast() == false) {
+            ContentValues val = new ContentValues();
+            val.put(Profile.Columns.ACTIVE, 0);
+            res.update(ContentUris.withAppendedId(uri, cur.getLong(Profile.Columns.ID_INDEX)), val, null, null);
+            val = null;
+            cur.moveToNext();
+        }
+    }
+    
     // AddProfile changes the values in Profile and update will grab those new
     // values.  
     public static int saveProfile(ContentResolver resolver, Profile profile) {
