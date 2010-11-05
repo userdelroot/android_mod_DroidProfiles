@@ -58,6 +58,7 @@ public class ProfilesProvider extends ContentProvider {
 	private static final int NOTIFY_EMAIL = 13;
 	private static final int NOTIFICATION = 14;
 	private static final int NOTIFICATION_ID = 15;	
+	private static final int PROFILES_ACTIVE = 16;
 	
 	private static final String AUTHORITY = "fac.userdelroot.droidprofiles";
 
@@ -81,6 +82,7 @@ public class ProfilesProvider extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, "notifications/email/#", NOTIFY_EMAIL);
 		sUriMatcher.addURI(AUTHORITY, "notifications", NOTIFICATION);
 		sUriMatcher.addURI(AUTHORITY, "notifications/#", NOTIFICATION_ID);
+		sUriMatcher.addURI(AUTHORITY, "profiles/active", PROFILES_ACTIVE);
 		
 	};
 
@@ -378,7 +380,9 @@ public class ProfilesProvider extends ContentProvider {
 			
 		case NOTIFICATION_ID:
 			return "vnd.android.cursor.item/notification";
-		
+			
+		case PROFILES_ACTIVE:
+		    return "vnd.android.cursor.dir/profiles/active";
 		
 		default:
 			throw new IllegalArgumentException("unknown Uri " + uri);
@@ -532,6 +536,11 @@ public class ProfilesProvider extends ContentProvider {
 			q.appendWhere(" AND notify_type = 4");
 			break;
 			
+		case PROFILES_ACTIVE:
+		    q.setTables(PROFILES_TBL);
+		    q.appendWhere("active=1");
+		    break;
+			
 		default:
 			throw new IllegalArgumentException("unknown Uri " + uri);
 		}
@@ -576,11 +585,22 @@ public class ProfilesProvider extends ContentProvider {
 			count = db.update(NOTIFICATION_TBL, values, "_id= "+ rowId , null);
 		}
 		break;
+		
+		case PROFILES_ACTIVE: {
+		    String segment = uri.getPathSegments().get(1);
+		    rowId = Long.parseLong(segment);
+		    count = db.update(PROFILES_TBL, values, "id= " + rowId, null);
+		}
+		    break;
 		default: {
 			throw new UnsupportedOperationException("Cannot update URL: " + uri);
-		}
+		    }
 		}
 
+		if (Log.LOGV)
+		    Log.i(TAG + "rows updated: " + count);
+		
+		
 		getContext().getContentResolver().notifyChange(uri, null);
 		db.close();
 		return count;
