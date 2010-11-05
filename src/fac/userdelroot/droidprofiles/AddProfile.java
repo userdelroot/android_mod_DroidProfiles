@@ -20,6 +20,8 @@ package fac.userdelroot.droidprofiles;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import fac.userdelroot.droidprofiles.pref.RingtonePref;
 import fac.userdelroot.droidprofiles.pref.VolumePref;
 import android.app.AlertDialog;
@@ -78,10 +80,15 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
     private Notify pMms;
     private Notify pEmail;
     
+    private static final int CONTACTS_RESULT = 9;
     private static final int EMAIL_RESULT = 10;
     private static final int SMS_RESULT = 11;
     private static final int MMS_RESULT = 12;
     private static final int PHONE_RESULT = 13;
+    
+    
+    private List<Integer> mContacts;
+    
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +96,8 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         addPreferencesFromResource(R.xml.add_profile);
 
+        mContacts = null;
+        
         mProfName = (EditTextPreference) this.findPreference(KEY_PROFILE_NAME);
         mProfActive = (CheckBoxPreference) this.findPreference(KEY_PROFILE_ACTIVE);
         mProfSilent = (CheckBoxPreference) this.findPreference(KEY_PROFILE_SILENT);
@@ -139,9 +148,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         // initialize our profileID if there is one
         getProfileData();
-
-        // clear helpercontacts
-        HelperContacts.clearAll();
 
         // set initial values here from database
         loadDefaultValues();
@@ -238,16 +244,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         // If it is not we return because this is a new profile
         if (mProfile.id <= 0)
             return;
-        /*
-        pPhone = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                Notify.Columns.NOTIFY_TYPE_PHONE);
-        pSms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                Notify.Columns.NOTIFY_TYPE_SMS);
-        pMms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                Notify.Columns.NOTIFY_TYPE_MMS);
-        pEmail = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfileId,
-                Notify.Columns.NOTIFY_TYPE_EMAIL);
-        */
 
         // thread to get the data for the parcel. this can be done in the background and it keeps the interface snappy.
         // TODO: should probably add some checks to make sure this completed?
@@ -350,6 +346,10 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         // grab the volume
         mProfile.ringvolume = mProfRingVolume.getVolume();
 
+        // check if this profile active.  If so, set others to not be.
+        if (mProfile.active)
+            Profiles.disableActiveProfiles(getContentResolver());
+        
         // if this profile is valid we are just editing
         if (mProfile.id > 0) {
             Profiles.saveProfile(getContentResolver(), mProfile);
@@ -369,13 +369,11 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
      */
     private void addContacts() {
 
-        // check if the contacts list has changed if not bail out
-        if (!HelperContacts.hashChanged())
+        if (mContacts == null)
             return;
 
         // contacts
         // TODO:
-        // -This is going to work the same as the overrides as it only stores
         // _ID profile_id real_contact_id
         // so delete old data and add new data
         // these methods run quite fast so I assume that should not be an issue
@@ -386,14 +384,11 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         // first delete all profile contacts match real_id
         // we only allow 1 contact per a profile
 
-        ArrayList<Long> list = HelperContacts.getList();
-
-        if (list == null)
-            return;
-
-        // this contact does not want any contacts associated so delete em
-        if (list.isEmpty()) {
+        // if there are no contacts, delete contacts if present.
+        // TODO: add something here to determine if they were present or not
+        if (mContacts.isEmpty()) {
             Profiles.deleteContactsbyProfileId(getContentResolver(), mProfile.id);
+            return;
         }
 
         // first delete all contacts with real_id
@@ -402,24 +397,19 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         // that would eliminate this
         // and would also fix it in the ProfilesHelper.class
 
-        if (list.isEmpty() == false) {
+        // delete all contacts associated with this profile
+        Profiles.deleteContactsbyProfileId(getContentResolver(), mProfile.id);
 
-            // delete all contacts associated with this profile
-            Profiles.deleteContactsbyProfileId(getContentResolver(), mProfile.id);
-
-            // delete all contacts associated with other profiles
-            for (long real_id : list) {
-                Profiles.delContactsByRealId(getContentResolver(), real_id);
-
-            }
-
-            // add all contacts to this profile
-            for (long id : list) {
-                Profiles.saveContacts(getContentResolver(), mProfile.id, id);
-            }
+        // delete all contacts associated with other profiles
+        for (int real_id : mContacts) {
+            Profiles.delContactsByRealId(getContentResolver(), real_id);
 
         }
 
+        // add all contacts to this profile
+        for (int id : mContacts) {
+            Profiles.saveContacts(getContentResolver(), mProfile.id, id);
+        }
     }
 
     /**
@@ -526,8 +516,8 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         if (pref == mContactScreen) {
             Intent intent = new Intent(this, ContactsActivity.class);
-            intent.putExtra(Notify.Columns._ID, mProfile.id);
-            startActivity(intent);
+            intent.putExtra("fac.userdelroot.droidprofiles.ContactsActivity", mProfile.id);
+            startActivityForResult(intent,CONTACTS_RESULT);
             return true;
         }
 
@@ -593,6 +583,10 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case CONTACTS_RESULT:
+                    mContacts = data.getIntegerArrayListExtra("fac.userdelroot.droidprofiles.ContactsActivity");
+                    Log.i(TAG + "onActivityResult contacts " + mContacts.toString());
+                    break;
                 case EMAIL_RESULT:
                     pEmail = data.getParcelableExtra("fac.userdelroot.droidprofiles.Notify");
                     break;
