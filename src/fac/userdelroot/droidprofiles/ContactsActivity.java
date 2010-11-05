@@ -18,7 +18,9 @@
 
 package fac.userdelroot.droidprofiles;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -42,6 +44,7 @@ public class ContactsActivity extends ListActivity implements OnItemClickListene
 	private static final String TAG = "ContactsActivity ";
 	private SimpleCursorAdapter adapter;
 	private ListView listview;
+	private ArrayList<Integer> mContacts;
 //	private static final int MENU_SAVE = Menu.FIRST;
 //	private static final int MENU_CANCEL = Menu.FIRST + 1;
 
@@ -49,13 +52,13 @@ public class ContactsActivity extends ListActivity implements OnItemClickListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		mContacts = new ArrayList<Integer>();
 		loadContacts();
 
 		
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private void loadContacts() {
 		
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
@@ -78,10 +81,10 @@ public class ContactsActivity extends ListActivity implements OnItemClickListene
 		listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listview.setOnItemClickListener(this);
 
-		Intent intent = getIntent();
+	       Bundle b = getIntent().getExtras();
+	      int profileid = b.getInt("fac.userdelroot.droidprofiles.ContactsActivity");
 		// get id
 
-		long profileid = intent.getLongExtra(Profiles.PROFILE_ID, -1);
 		Cursor c = null;
 		if (profileid > 0) {
 			// grab the contacts from the profiles database
@@ -90,58 +93,48 @@ public class ContactsActivity extends ListActivity implements OnItemClickListene
 		
 		if (c == null)
 			return;
+		
+		// used for checking if contact is present.
+        HashMap<Integer, String> map = new HashMap<Integer, String>();
+		
+        if (c.moveToFirst()) {
+            int index = c.getColumnIndex(Contacts.Columns.REAL_ID);
+            while (c.isAfterLast() == false) {
+                mContacts.add(c.getInt(index));
+                map.put(c.getInt(index), "none");
+                c.moveToNext();
+            }
+        }
+        c.close();
 
-		HashMap map = HelperContacts.getMap();
-		
-		if (Log.LOGV)
-			Log.v(TAG + "Map= " +map.toString() );
+        if (mContacts.isEmpty() || map == null)
+            return;
 
-		
-		if (map.isEmpty()) {
-			if (c.moveToFirst()) {
-				int index = c.getColumnIndex(Contacts.Columns.REAL_ID);
-				while (c.isAfterLast() == false) {
-					map.put(c.getLong(index), "none");
-					c.moveToNext();
-				}
-			}
-		}
-		c.close();
-		long key = -1; 
-		if (map.containsKey(key)) {
-			if (Log.LOGV)
-				Log.v(TAG + " map reset due to no items checked ");
-			map.clear();
-		}
-		
-		if (Log.LOGV)
-			Log.v(TAG +"New Map " +map.toString());
+ // if the contact exists in the profile. If so check it.
+        if (cursor.moveToFirst()) {
+            int index = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+            int i = 0;
+            while (cursor.isAfterLast() == false) {
 
-		if (cursor.moveToFirst()) {
-			int index = cursor.getColumnIndex(ContactsContract.Contacts._ID);
-			int i = 0;
-			while (cursor.isAfterLast() == false) {
-				if (map.containsKey(cursor.getLong(index))) {
-					listview.setItemChecked(i, true);
-				}
-				i++;
-				cursor.moveToNext();
-				
-			}
-		}
-		
-	}
+                if (map.containsKey(cursor.getInt(index))) {
+                    listview.setItemChecked(i, true);
+                }
+                i++;
+                cursor.moveToNext();
+
+            }
+        }
+
+        map.clear();
+
+    }
 
 	private final void setContacts() {
-				
-		
-		HashMap map = HelperContacts.getMap();
-		if (map != null && map.isEmpty())
-			HelperContacts.addItemToMap(-1);
-		
-		HelperContacts.setList();
 
-		finish();
+        Intent retIntent = new Intent();
+        retIntent.putIntegerArrayListExtra("fac.userdelroot.droidprofiles.ContactsActivity", mContacts);
+        setResult(RESULT_OK, retIntent);
+	    finish();
 	}
 
 	@Override
@@ -150,7 +143,7 @@ public class ContactsActivity extends ListActivity implements OnItemClickListene
 		case KeyEvent.KEYCODE_BACK:
 			// we assume save
 			setContacts();
-			//return true;
+			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -167,17 +160,15 @@ public class ContactsActivity extends ListActivity implements OnItemClickListene
 
 			if (Log.LOGV)
 				Log.w(TAG + "adding checked item @ pos " + position + "with id " + id);
-			
-			HelperContacts.addItemToMap(id);
-			
+			addContact(id);
+			    
 			
 		}
 		else {
 			if (Log.LOGV)
 				Log.w(TAG + "deleting unchecked item @ pos " + position + "with id " + id);
 			
-			
-			HelperContacts.delItemFromMap(id);
+			deleteContact(id);
 			
 		}
 		
@@ -194,5 +185,15 @@ public class ContactsActivity extends ListActivity implements OnItemClickListene
 		super.onDestroy();
 	}
 
+
+	private void addContact(long id) {
+	    
+	    mContacts.add((int)id);
+	}
 	
+	private void deleteContact(long id) {
+	    Object obj = (int) id;
+	    mContacts.remove(obj);
+	    obj = null;
+	}
 }
