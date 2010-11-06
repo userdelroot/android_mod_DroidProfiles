@@ -18,8 +18,6 @@
 
 package fac.userdelroot.droidprofiles;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import fac.userdelroot.droidprofiles.pref.RingtonePref;
@@ -140,42 +138,14 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
             return;
         }
 
-        // set click listeners
-        setListeners();
-
-        // not needed
-        // mListOverrides.setOnPreferenceClickListener(this);
-
         // initialize our profileID if there is one
         getProfileData();
 
         // set initial values here from database
         loadDefaultValues();
 
-        // we want all of them
-        getNotifyParcels();
     }
-
-    /**
-     * set the click listeners
-     */
-    private final void setListeners() {
-
-        mProfName.setOnPreferenceChangeListener(this);
-        mProfActive.setOnPreferenceClickListener(this);
-        mProfSilent.setOnPreferenceClickListener(this);
-        mProfVibrate.setOnPreferenceClickListener(this);
-        mProfRing.setOnPreferenceClickListener(this);
-        mProfOverride.setOnPreferenceClickListener(this);
-        mProfCustom.setOnPreferenceClickListener(this);
-        mContactScreen.setOnPreferenceClickListener(this);
-        mProfRingVolume.setOnPreferenceClickListener(this);
-        mEmailNotify.setOnPreferenceClickListener(this);
-        mSmsNotify.setOnPreferenceClickListener(this);
-        mMmsNotify.setOnPreferenceClickListener(this);
-        mPhoneNotify.setOnPreferenceClickListener(this);
-    }
-
+    
     /**
      * get profile data.  if a valid profile id was sent in the intent
      * we will grab the profile. 
@@ -232,38 +202,6 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         }
     }
     
-    /**
-     * getNotification thread runner to load our parcels
-     * TODO: i really hate "Loading" screens so need to do checks to make sure we grabbed this info.
-     * Maybe do this some place else?
-     * @param notifyType
-     */
-    private void getNotifyParcels() {
-
-        // this needs to be a valid ID 
-        // If it is not we return because this is a new profile
-        if (mProfile.id <= 0)
-            return;
-
-        // thread to get the data for the parcel. this can be done in the background and it keeps the interface snappy.
-        // TODO: should probably add some checks to make sure this completed?
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    pPhone = Profiles.getNotifyByProfileId(getContentResolver(), mProfile.id,
-                            Notify.Columns.NOTIFY_TYPE_PHONE);
-                    pSms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfile.id,
-                            Notify.Columns.NOTIFY_TYPE_SMS);
-                    pMms = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfile.id,
-                            Notify.Columns.NOTIFY_TYPE_MMS);
-                    pEmail = Profiles.getNotifyByProfileId(getContentResolver(), (int) mProfile.id,
-                            Notify.Columns.NOTIFY_TYPE_EMAIL);
-                }
-            };
-            t.start();
-
-    }
-
     /*
      * Do something if the preference has changed update summary set newValue
      * into the LinkedHashMap (mProfile) key is the db table name value is well
@@ -441,7 +379,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
         super.onDestroy();
 
         mProfName.setOnPreferenceChangeListener(null);
@@ -458,6 +396,25 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         mMmsNotify.setOnPreferenceClickListener(null);
         mPhoneNotify.setOnPreferenceClickListener(null);
     }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mProfName.setOnPreferenceChangeListener(this);
+        mProfActive.setOnPreferenceClickListener(this);
+        mProfSilent.setOnPreferenceClickListener(this);
+        mProfVibrate.setOnPreferenceClickListener(this);
+        mProfRing.setOnPreferenceClickListener(this);
+        mProfOverride.setOnPreferenceClickListener(this);
+        mProfCustom.setOnPreferenceClickListener(this);
+        mContactScreen.setOnPreferenceClickListener(this);
+        mProfRingVolume.setOnPreferenceClickListener(this);
+        mEmailNotify.setOnPreferenceClickListener(this);
+        mSmsNotify.setOnPreferenceClickListener(this);
+        mMmsNotify.setOnPreferenceClickListener(this);
+        mPhoneNotify.setOnPreferenceClickListener(this);
+    }
+    
 
     /*
      * I guess this is how it is suppose to work but seems silly
@@ -474,32 +431,31 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
         if (pref == mProfActive) {
 
             mProfile.active = mProfActive.isChecked();
-            mProfActive.setSummary(mProfActive.isChecked() ? "yes" : "no");
+            //mProfActive.setSummary(mProfActive.isChecked() ? "yes" : "no");
 
             return true;
         }
 
         if (pref == mProfSilent) {
             mProfile.silent = mProfSilent.isChecked();
-
-            mProfSilent.setSummary(mProfSilent.isChecked() ? "yes" : "no");
+           // mProfSilent.setSummary(mProfSilent.isChecked() ? "yes" : "no");
             return true;
         }
 
         if (pref == mProfVibrate) {
             mProfile.vibrate = mProfVibrate.isChecked();
-            mProfVibrate.setSummary(mProfVibrate.isChecked() ? "yes" : "no");
+            //mProfVibrate.setSummary(mProfVibrate.isChecked() ? "yes" : "no");
             return true;
         }
 
         if (pref == mProfRing) {
             mProfile.ringer = mProfRing.isChecked();
-            mProfRing.setSummary(mProfRing.isChecked() ? "yes" : "no");
+            //mProfRing.setSummary(mProfRing.isChecked() ? "yes" : "no");
             return true;
         }
         if (pref == mProfOverride) {
             mProfile.override = mProfOverride.isChecked();
-            mProfOverride.setSummary(mProfOverride.isChecked() ? "yes" : "no");
+            //mProfOverride.setSummary(mProfOverride.isChecked() ? "yes" : "no");
             return true;
         }
 
@@ -510,7 +466,7 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         if (pref == mProfCustom) {
             mProfile.custom_notify = mProfCustom.isChecked();
-            mProfCustom.setSummary(mProfCustom.isChecked() ? "yes" : "no");
+            //mProfCustom.setSummary(mProfCustom.isChecked() ? "yes" : "no");
             return true;
         }
 
@@ -523,51 +479,31 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
 
         if (pref == mEmailNotify) {
 
-            // if this is null, this is either a new profile or profile has no
-            // notifications
-            if (pEmail == null)
-                pEmail = new Notify();
-
             Intent intent = new Intent(this, EmailPreferences.class);
-            intent.putExtra("fac.userdelroot.droidprofiles.Notify", pEmail);
+            intent.putExtra("fac.userdelroot.droidprofiles.Notify", mProfile.id);
             startActivityForResult(intent,EMAIL_RESULT);
             return true;
         }
         if (pref == mSmsNotify) {
 
-            // if this is null, this is either a new profile or profile has no
-            // notifications
-            if (pSms == null)
-                pSms = new Notify();
-
             Intent intent = new Intent(this, SMSPreferences.class);
-            intent.putExtra("fac.userdelroot.droidprofiles.Notify", pSms);
+            intent.putExtra("fac.userdelroot.droidprofiles.Notify", mProfile.id);
             startActivityForResult(intent,SMS_RESULT);
 
             return true;
         }
         if (pref == mMmsNotify) {
 
-            // if this is null, this is either a new profile or profile has no
-            // notifications
-            if (pMms == null)
-                pMms = new Notify();
-
             Intent intent = new Intent(this, MMSPreferences.class);
-            intent.putExtra("fac.userdelroot.droidprofiles.Notify", pMms);
+            intent.putExtra("fac.userdelroot.droidprofiles.Notify", mProfile.id);
             startActivityForResult(intent, MMS_RESULT);
 
             return true;
         }
         if (pref == mPhoneNotify) {
 
-            // if this is null, this is either a new profile or profile has no
-            // notifications
-            if (pPhone == null)
-                pPhone = new Notify();
-
             Intent intent = new Intent(this, PhonePreferences.class);
-            intent.putExtra("fac.userdelroot.droidprofiles.Notify", pPhone);
+            intent.putExtra("fac.userdelroot.droidprofiles.Notify", mProfile.id);
             startActivityForResult(intent, PHONE_RESULT);
             return true;
         }
@@ -585,10 +521,10 @@ public class AddProfile extends PreferenceActivity implements OnPreferenceChange
             switch (requestCode) {
                 case CONTACTS_RESULT:
                     mContacts = data.getIntegerArrayListExtra("fac.userdelroot.droidprofiles.ContactsActivity");
-                    Log.i(TAG + "onActivityResult contacts " + mContacts.toString());
                     break;
                 case EMAIL_RESULT:
                     pEmail = data.getParcelableExtra("fac.userdelroot.droidprofiles.Notify");
+                    Log.i(TAG + "pEmail " + pEmail.toString());
                     break;
                 case SMS_RESULT:
                     pSms = data.getParcelableExtra("fac.userdelroot.droidprofiles.Notify");
