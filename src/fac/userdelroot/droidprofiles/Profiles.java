@@ -18,8 +18,6 @@
 
 package fac.userdelroot.droidprofiles;
 
-import java.util.HashMap;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -203,9 +201,9 @@ public class Profiles {
     }
     
     
-    public static void disableActiveProfiles(ContentResolver res) {
+    public static void disableActiveProfiles(ContentResolver cr) {
         Uri uri = Profile.Columns.CONTENT_URI;
-        Cursor cur = res.query(Uri.withAppendedPath(uri, "active"), null, null, null, null);
+        Cursor cur = cr.query(Uri.withAppendedPath(uri, "active"), null, null, null, null);
         
         if (!cur.moveToFirst()) {
             cur.close();
@@ -214,10 +212,12 @@ public class Profiles {
         while(cur.isAfterLast() == false) {
             ContentValues val = new ContentValues();
             val.put(Profile.Columns.ACTIVE, 0);
-            res.update(ContentUris.withAppendedId(uri, cur.getLong(Profile.Columns.ID_INDEX)), val, null, null);
+            cr.update(ContentUris.withAppendedId(uri, cur.getLong(Profile.Columns.ID_INDEX)), val, null, null);
             val = null;
             cur.moveToNext();
         }
+        
+        cur.close();
     }
     
     // AddProfile changes the values in Profile and update will grab those new
@@ -313,4 +313,20 @@ public class Profiles {
             Log.i(TAG + "->delContactsByReadId number of rows affected " + numRows + " for id "
                     + real_id);
     }
+
+    /**
+     * Active / deactive the specified profile
+     * @param cr
+     * @param id
+     */
+    public static void setProfileActive(ContentResolver cr, long id, boolean active) {
+        disableActiveProfiles(cr);
+        
+        ContentValues val = new ContentValues();
+        val.put(Profile.Columns.ACTIVE, (!active) ? 0 : 1);
+        Uri uri = Profile.Columns.CONTENT_URI;
+        cr.update(ContentUris.withAppendedId(uri, (long) id), val, null, null);
+        
+    }
+    
 }
