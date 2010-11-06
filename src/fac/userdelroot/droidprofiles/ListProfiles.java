@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,9 +51,7 @@ public class ListProfiles extends Activity implements OnItemClickListener {
 	private static final int MENU_ACTIVE = Menu.FIRST;
 	private static final int MENU_DEACTIVE = Menu.FIRST + 1;
 	private ListView mList;
-	private SimpleCursorAdapter mSimpleAdapter;
 	private long mProfileId;
-	private Cursor mCursor;
 	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -103,33 +102,29 @@ public class ListProfiles extends Activity implements OnItemClickListener {
 		Uri uri = Profile.Columns.CONTENT_URI;
 		String projection[] = { Profile.Columns.NAME, Profile.Columns._ID };
 		String sortOrder = Profile.Columns.NAME + " COLLATE LOCALIZED ASC";
-		mCursor = managedQuery(uri, projection, null, null, sortOrder);
+		Cursor cursor = managedQuery(uri, projection, null, null, sortOrder);
 		int to[] = { R.id.profile_list_id, R.id.profile_list_name };
-		mSimpleAdapter = new SimpleCursorAdapter(this, R.layout.profiles_list, mCursor,
+		SimpleCursorAdapter mSimpleAdapter = new SimpleCursorAdapter(this, R.layout.profiles_list, cursor,
 				projection, to);
 		mList.setAdapter(mSimpleAdapter);
 		
 		
 		if (Log.LOGV)
-		    Log.i(TAG + "fillProfileList() row count " + mCursor.getCount() );
+		    Log.i(TAG + "fillProfileList() row count " + cursor.getCount() );
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mSimpleAdapter = null;
 	      // set the lsitener(s)
         mList.setOnItemClickListener(null);
         mList.setOnCreateContextMenuListener(null);
-        mCursor.close();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// do i need to do this ?
-		mCursor.close();
-		mSimpleAdapter = null;
 		mList = null;
 		
 	}
@@ -179,10 +174,14 @@ public class ListProfiles extends Activity implements OnItemClickListener {
         
         switch (item.getItemId()) {
             case R.id.set_profile_active:
-                break;
-                
+                Profiles.setProfileActive(getContentResolver(), id, true);
+                fillProfileList();
+
+                return true;
             case R.id.edit_profile:
-                break;
+                    mProfileId = id;
+                    AddorEditProfile();
+                return true;
                 
             case R.id.delete_profile:
                 new AlertDialog.Builder(this)
@@ -209,9 +208,13 @@ public class ListProfiles extends Activity implements OnItemClickListener {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
         // Inflate the menu from xml.
-        getMenuInflater().inflate(R.menu.context_menu, menu);
-
+        
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
     }
+    
+    
+    
     
     /**
      * Delete the profile TODO: maybe add a toast with the profile name that was
@@ -224,41 +227,17 @@ public class ListProfiles extends Activity implements OnItemClickListener {
         
         Profiles.deleteProfile(getContentResolver(), id);
 
-        /*
-         * FIXME: quick and dirty, I have tried many attempts to
-         * mCursor.requery() and adapter.notifyDataSetChanged() to get the
-         * screen to refresh to no avail. 
-         * 
-         * null adapter null cursor and polulate list again.
-         */
-        mSimpleAdapter = null;
-        mCursor.close();
-        mCursor = null;
-
-        Uri uri = Profile.Columns.CONTENT_URI;
-        String projection[] = {
-                Profile.Columns.NAME, Profile.Columns._ID
-        };
-        String sortOrder = Profile.Columns.NAME + " COLLATE LOCALIZED ASC";
-        mCursor = managedQuery(uri, projection, null, null, sortOrder);
-        // startManagingCursor(mCursor);
-        int to[] = {
-                R.id.profile_list_id, R.id.profile_list_name
-        };
-        mSimpleAdapter = new SimpleCursorAdapter(this, R.layout.profiles_list, mCursor, projection,
-                to);
-        mList.setAdapter(mSimpleAdapter);
-
+        fillProfileList();
         Toast.makeText(this, R.string.profile_deleted, Toast.LENGTH_SHORT).show();
     }
     
     private void serviceOn(boolean b) {
 		
 		if (b) { 
-            startService(new Intent(this, ProfileService.class));
+         //   startService(new Intent(this, ProfileService.class));
             return;
 		}
-        stopService(new Intent(this, ProfileService.class));
+       // stopService(new Intent(this, ProfileService.class));
 	}
 	
 }
