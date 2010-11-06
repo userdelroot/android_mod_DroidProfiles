@@ -17,7 +17,7 @@
 		<application android:icon="@drawable/icon" android:label="@string/app_name" >
 			<provider android:name="ProfilesProvider"
 				android:authorities="fac.userdelroot.droidprofiles" />
-			<activity android:name="ProfilesActivity" android:label="@string/app_name"
+			<activity android:name="ListProfiles" android:label="@string/app_name"
 				android:launchMode="singleTask">
 				<intent-filter>
 					<action android:name="android.intent.action.MAIN" />
