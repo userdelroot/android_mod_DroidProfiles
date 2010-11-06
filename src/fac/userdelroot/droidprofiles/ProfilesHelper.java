@@ -25,14 +25,12 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 
 public class ProfilesHelper {
 
 	
 	private static final String TAG = "ProfilesHelper ";
-	private static Thread mThread;
 	
 	static String name;
 	static String number;
@@ -72,13 +70,13 @@ public class ProfilesHelper {
 	
 
 	
-	private static Runnable initRunnable = new Runnable() {
+/*	private static Runnable initRunnable = new Runnable() {
 		public void run() {
 			initBackground();
 		}
 	};
 	
-
+*/
 	private static void initBackground() {
 
 		if (!getRealContactInfo()) return;

@@ -19,14 +19,9 @@
 
 package fac.userdelroot.droidprofiles;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;

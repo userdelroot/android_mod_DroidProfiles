@@ -18,10 +18,6 @@
 
 package fac.userdelroot.droidprofiles;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -34,6 +30,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Display the contacts with selectable checkboxes

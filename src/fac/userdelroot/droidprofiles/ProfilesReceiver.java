@@ -22,9 +22,6 @@ package fac.userdelroot.droidprofiles;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 
 public class ProfilesReceiver extends BroadcastReceiver {
 

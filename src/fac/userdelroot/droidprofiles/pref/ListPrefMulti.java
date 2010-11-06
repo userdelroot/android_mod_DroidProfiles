@@ -18,10 +18,7 @@
 
 
 package fac.userdelroot.droidprofiles.pref;
-
-import java.util.ArrayList;
-
-import fac.userdelroot.droidprofiles.R;
+//import fac.userdelroot.droidprofiles.R;
 
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -40,11 +37,11 @@ public class ListPrefMulti extends ListPreference {
 	private CharSequence[] mEntries;
 	private CharSequence[] mEntryValues;
 	private boolean[] mCheckedValues;
-	private ArrayList mCheckedList = null;
+//	private ArrayList mCheckedList = null;
 
 	public ListPrefMulti(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mCheckedList = new ArrayList();
+		//mCheckedList = new ArrayList();
 		// mEntries = getEntries();
 		// mEntryValues = getEntryValues();
 		// mSelEntryValue = new LinkedHashMap();
@@ -52,7 +49,7 @@ public class ListPrefMulti extends ListPreference {
 
 	public ListPrefMulti(Context context) {
 		super(context, null);
-		mCheckedList = new ArrayList();
+		//mCheckedList = new ArrayList();
 	}
 
 	@Override
@@ -98,7 +95,7 @@ public class ListPrefMulti extends ListPreference {
 							//		+ " which " + mEntryValues[which]);
 
 					}
-				}).setPositiveButton(R.string.menu_save,
+				}).setPositiveButton(fac.userdelroot.droidprofiles.R.string.menu_save,
 				new DialogInterface.OnClickListener() {
 
 					@Override
@@ -109,12 +106,12 @@ public class ListPrefMulti extends ListPreference {
 						dialog.dismiss();
 
 					}
-				}).setNegativeButton(R.string.menu_cancel,
+				}).setNegativeButton(fac.userdelroot.droidprofiles.R.string.menu_cancel,
 				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						mCheckedList = null;
+						//mCheckedList = null;
 						dialog.cancel();
 					}
 				});
@@ -145,10 +142,10 @@ public class ListPrefMulti extends ListPreference {
 	 *             but i did not want it used we don't use it! Use this instead
 	 *             {@link #getCheckedItems()}
 	 */
-	@Deprecated
-	public ArrayList getCheckedList() {
-		return this.mCheckedList;
-	}
+//	@Deprecated
+//	public ArrayList getCheckedList() {
+//		return this.mCheckedList;
+//	}
 
 	public void setCheckedValues(boolean[] checkedValues) {
 		this.mCheckedValues = checkedValues;
