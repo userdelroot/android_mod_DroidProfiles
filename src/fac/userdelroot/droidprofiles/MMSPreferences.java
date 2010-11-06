@@ -46,9 +46,8 @@ public class MMSPreferences extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         addPreferencesFromResource(R.xml.notification_pref);
-        Bundle b = getIntent().getExtras();
-        pNotify = b.getParcelable("fac.userdelroot.droidprofiles.Notify");
 
         mNotification = (CheckBoxPreference) this.findPreference("notification_bar");
         mNotifyIcon = (ListPreference) this.findPreference("notification_bar_icon");
@@ -71,7 +70,6 @@ public class MMSPreferences extends PreferenceActivity {
             return;
         }
 
-        loadDefaultValues();
     }
 
     /**
@@ -107,6 +105,27 @@ public class MMSPreferences extends PreferenceActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pNotify = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Bundle b = getIntent().getExtras();
+        int profileId = b.getInt("fac.userdelroot.droidprofiles.Notify", -1);
+        
+        pNotify = Profiles.getNotifyByProfileId(getContentResolver(), profileId, Notify.Columns.NOTIFY_TYPE_MMS);
+       
+        if (pNotify == null) 
+            pNotify = new Notify();
+        
+        loadDefaultValues();
+
+    }
+    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {

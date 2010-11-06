@@ -49,9 +49,6 @@ public class PhonePreferences extends PreferenceActivity {
         
         addPreferencesFromResource(R.xml.notification_phone_pref);
 
-        Bundle b = getIntent().getExtras();
-        pNotify = b.getParcelable("fac.userdelroot.droidprofiles.Notify");
-
         mLed = (CheckBoxPreference) this.findPreference("led_enabled");
         mLedPattern = (ListPreference) this.findPreference("led_pattern");
         mLedColor = (ListPreference) this.findPreference("led_color");
@@ -70,7 +67,6 @@ public class PhonePreferences extends PreferenceActivity {
             return;
         }
 
-        loadDefaultValues();
     }
 
     /**
@@ -100,6 +96,27 @@ public class PhonePreferences extends PreferenceActivity {
         } catch (RuntimeException e) {
 
         }
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pNotify = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Bundle b = getIntent().getExtras();
+        int profileId = b.getInt("fac.userdelroot.droidprofiles.Notify", -1);
+        
+        pNotify = Profiles.getNotifyByProfileId(getContentResolver(), profileId, Notify.Columns.NOTIFY_TYPE_PHONE);
+        
+        if (pNotify == null) 
+            pNotify = new Notify();
+        
+        loadDefaultValues();
+
     }
     
     @Override

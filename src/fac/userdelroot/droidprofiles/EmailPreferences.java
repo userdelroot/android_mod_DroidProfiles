@@ -19,6 +19,7 @@
 package fac.userdelroot.droidprofiles;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -49,9 +50,6 @@ public class EmailPreferences extends PreferenceActivity {
 
         addPreferencesFromResource(R.xml.notification_pref);
 
-        Bundle b = getIntent().getExtras();
-        pNotify = b.getParcelable("fac.userdelroot.droidprofiles.Notify");
-
         mNotification = (CheckBoxPreference) this.findPreference("notification_bar");
         mNotifyIcon = (ListPreference) this.findPreference("notification_bar_icon");
         mLed = (CheckBoxPreference) this.findPreference("led_enabled");
@@ -73,7 +71,6 @@ public class EmailPreferences extends PreferenceActivity {
             return;
         }
 
-        loadDefaultValues();
     }
 
     /**
@@ -106,6 +103,28 @@ public class EmailPreferences extends PreferenceActivity {
         } catch (RuntimeException e) {
 
         }
+    }
+
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pNotify = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Bundle b = getIntent().getExtras();
+        int profileId = b.getInt("fac.userdelroot.droidprofiles.Notify", -1);
+        
+        pNotify = Profiles.getNotifyByProfileId(getContentResolver(), profileId, Notify.Columns.NOTIFY_TYPE_EMAIL);
+
+        if (pNotify == null) 
+            pNotify = new Notify();
+        
+        loadDefaultValues();
+
     }
 
     @Override
