@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" >
+	
+	<TextView 
+		android:id="@+id/profile_add"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:text="@string/profile_add" 
+		android:textAppearance="?android:attr/textAppearanceLarge" 
+		android:minHeight="?android:attr/listPreferredItemHeight"
+		android:background="@android:drawable/list_selector_background" 
+		android:clickable="true" android:focusable="true" android:gravity="center_vertical" />
+
+	<TextView 
+		style="?android:attr/listSeparatorTextViewStyle"
+		android:text="Profile List" 
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content" android:focusable="false" android:clickable="false" />
+		
+	<ListView 
+		android:id="@+id/profile_list"
+		android:layout_width="fill_parent" android:layout_height="0dip"
+		android:layout_weight="1" android:fastScrollEnabled="true"
+		android:fadeScrollbars="true" android:choiceMode="singleChoice" />
+
+</LinearLayout>
