@@ -34,15 +34,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- *  
  * 
+ * @author userdelroot
  */
 public class ListProfiles extends Activity implements OnItemClickListener {
 
@@ -66,10 +66,10 @@ public class ListProfiles extends Activity implements OnItemClickListener {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
-		setContentView(R.layout.profiles_activity);
+		setContentView(R.layout.list_profiles);
 
 		mList = (ListView) findViewById(R.id.profile_list);
-		LinearLayout profileAdd = (LinearLayout) findViewById(R.id.profile_add);
+		TextView profileAdd = (TextView) findViewById(R.id.profile_add);
 		profileAdd.setOnClickListener(new OnClickListener() {
 
 			@Override
